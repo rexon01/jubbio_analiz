@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link rel="dns-prefetch" href="https://fonts.bunny.net">
+    <link rel="preload" href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
+    </noscript>
+    <title>Jubbio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .splash-container {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+            color: #e2e8f0;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1e293b;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            -webkit-app-region: drag;
+        }
+
+        .splash-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(173, 255, 8, 0.3), transparent);
+        }
+
+        .logo {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 1.25rem;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(173, 255, 8, 0.15));
+        }
+
+        .logo.pulse {
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 15px rgba(173, 255, 8, 0.15));
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 25px rgba(173, 255, 8, 0.3));
+            }
+        }
+
+        .status-text {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            min-height: 1.25rem;
+            transition: opacity 0.2s ease;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            max-width: 200px;
+            height: 4px;
+            background: #1e293b;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .progress-container.visible {
+            display: block;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #adff08, #84cc16);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .progress-text.visible {
+            display: block;
+        }
+
+        /* Update Available Section */
+        .update-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .update-section.visible {
+            display: flex;
+        }
+
+        .update-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #adff08;
+        }
+
+        .update-version {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .update-note {
+            font-size: 0.7rem;
+            color: #64748b;
+            max-width: 220px;
+            line-height: 1.4;
+            margin-top: 0.25rem;
+        }
+
+        .update-btn {
+            background: linear-gradient(135deg, #adff08, #84cc16);
+            color: #020617;
+            border: none;
+            padding: 0.625rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            -webkit-app-region: no-drag;
+        }
+
+        .update-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(173, 255, 8, 0.3);
+        }
+
+        .update-btn:active {
+            transform: translateY(0);
+        }
+
+        .update-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Error Section */
+        .error-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .error-section.visible {
+            display: flex;
+        }
+
+        .error-text {
+            font-size: 0.75rem;
+            color: #f87171;
+            max-width: 220px;
+            word-break: break-word;
+        }
+
+        .error-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .retry-btn {
+            background: #334155;
+            color: #e2e8f0;
+            border: 1px solid #475569;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            -webkit-app-region: no-drag;
+        }
+
+        .retry-btn:hover {
+            background: #475569;
+        }
+
+
+
+        /* Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #334155;
+            border-top-color: #adff08;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 0.75rem;
+            display: none;
+        }
+
+        .spinner.visible {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="splash-container">
+        <img src="../electron/resources/logo/jubbio-logo-32x32.svg" alt="Logo" class="logo pulse" id="logo">
+        
+        <div class="spinner" id="spinner"></div>
+        
+        <div class="status-text" id="status">Jubbio</div>
+        
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="progress-text" id="progressText"></div>
+        
+        <!-- Update Section -->
+        <div class="update-section" id="updateSection">
+            <div class="update-title">Güncelleme Hazır</div>
+            <div class="update-version" id="updateVersion"></div>
+            <button class="update-btn" id="updateBtn">Şimdi Güncelle</button>
+        </div>
+
+        <!-- Error Section -->
+        <div class="error-section" id="errorSection">
+            <div class="error-text" id="errorText"></div>
+            <div class="error-buttons">
+                <button class="retry-btn" id="retryBtn">Tekrar Dene</button>
+                <button class="retry-btn" id="skipBtn">Atla</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        // Elements
+        const logo = document.getElementById('logo');
+        const spinner = document.getElementById('spinner');
+        const status = document.getElementById('status');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const errorSection = document.getElementById('errorSection');
+        const errorText = document.getElementById('errorText');
+        const retryBtn = document.getElementById('retryBtn');
+        const updateSection = document.getElementById('updateSection');
+        const updateVersion = document.getElementById('updateVersion');
+        const updateBtn = document.getElementById('updateBtn');
+        let currentVersion = '';
+
+        // Helper functions
+        function hideAll() {
+            spinner.classList.remove('visible');
+            progressContainer.classList.remove('visible');
+            progressText.classList.remove('visible');
+            errorSection.classList.remove('visible');
+            updateSection.classList.remove('visible');
+        }
+
+        function showSpinner() {
+            hideAll();
+            spinner.classList.add('visible');
+            logo.classList.remove('pulse');
+        }
+
+        function showProgress() {
+            hideAll();
+            progressContainer.classList.add('visible');
+            progressText.classList.add('visible');
+            logo.classList.remove('pulse');
+        }
+
+        function showUpdateReady(version) {
+            hideAll();
+            updateSection.classList.add('visible');
+            updateVersion.textContent = `Versiyon ${version}`;
+            currentVersion = version;
+            logo.classList.add('pulse');
+        }
+
+        function showError(message) {
+            hideAll();
+            errorSection.classList.add('visible');
+            errorText.textContent = message || 'Bir hata oluştu';
+            logo.classList.remove('pulse');
+        }
+
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        // Event listeners
+        updateBtn.addEventListener('click', () => {
+            updateBtn.disabled = true;
+            updateBtn.textContent = 'Yükleniyor...';
+            status.textContent = 'Güncelleme yükleniyor...';
+            ipcRenderer.send('install-update-now');
+        });
+
+        retryBtn.addEventListener('click', () => {
+            showSpinner();
+            status.textContent = 'Tekrar deneniyor...';
+            ipcRenderer.send('retry-update');
+        });
+
+        const skipBtn = document.getElementById('skipBtn');
+        skipBtn.addEventListener('click', () => {
+            showSpinner();
+            status.textContent = 'Uygulama başlatılıyor...';
+            ipcRenderer.send('skip-update');
+        });
+
+
+
+        // IPC listeners
+        ipcRenderer.on('update-status', (event, data) => {
+            console.log('[Splash] Update status:', data.type, data);
+
+            switch (data.type) {
+                case 'checking':
+                    showSpinner();
+                    status.textContent = 'Güncellemeler denetleniyor...';
+                    break;
+
+                case 'available':
+                    showSpinner();
+                    status.textContent = `Güncelleme indiriliyor... (v${data.version})`;
+                    break;
+
+                case 'not-available':
+                    showSpinner();
+                    status.textContent = 'Uygulama güncel';
+                    break;
+
+                case 'downloading':
+                    showProgress();
+                    const percent = Math.round(data.percent || 0);
+                    progressBar.style.width = percent + '%';
+                    status.textContent = 'Güncelleme indiriliyor...';
+                    
+                    if (data.transferred && data.total) {
+                        progressText.textContent = `${formatBytes(data.transferred)} / ${formatBytes(data.total)} (${percent}%)`;
+                    } else {
+                        progressText.textContent = `${percent}%`;
+                    }
+                    break;
+
+                case 'downloaded':
+                    showUpdateReady(data.version);
+                    status.textContent = 'Güncelleme indirildi';
+                    break;
+
+                case 'installing':
+                    hideAll();
+                    showSpinner();
+                    status.textContent = 'Güncelleme kuruluyor, uygulama yeniden başlatılacak...';
+                    break;
+
+                case 'loading':
+                    showSpinner();
+                    status.textContent = data.message || 'Yükleniyor...';
+                    break;
+
+                case 'error':
+                    showError(data.message);
+                    status.textContent = 'Güncelleme hatası';
+                    // Hata durumunda splash kapatılabilir olsun
+                    break;
+            }
+        });
+
+        // Legacy support for old splash-progress events
+        ipcRenderer.on('splash-progress', (event, data) => {
+            if (data.message) {
+                status.textContent = data.message;
+            }
+        });
+    </script>
+</body>
+
+</html>

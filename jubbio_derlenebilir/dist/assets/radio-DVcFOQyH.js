@@ -1,0 +1,35 @@
+import { t as _0x5bb4e7 } from "./index-cQfEKR1W.js"; /**
+                                                      * @license lucide-react v0.535.0 - ISC
+                                                      *
+                                                      * This source code is licensed under the ISC license.
+                                                      * See the LICENSE file in the root directory of this source tree.
+                                                      */
+const e = _0x5bb4e7("megaphone", [["path", {
+  d: "M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z",
+  key: "q8bfy3"
+}], ["path", {
+  d: "M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14",
+  key: "1853fq"
+}], ["path", {
+  d: "M8 6v8",
+  key: "15ugcq"
+}]]);
+const p = _0x5bb4e7("radio", [["path", {
+  d: "M16.247 7.761a6 6 0 0 1 0 8.478",
+  key: "1fwjs5"
+}], ["path", {
+  d: "M19.075 4.933a10 10 0 0 1 0 14.134",
+  key: "ehdyv1"
+}], ["path", {
+  d: "M4.925 19.067a10 10 0 0 1 0-14.134",
+  key: "1q22gi"
+}], ["path", {
+  d: "M7.753 16.239a6 6 0 0 1 0-8.478",
+  key: "r2q7qm"
+}], ["circle", {
+  cx: "12",
+  cy: "12",
+  r: "2",
+  key: "1c9p78"
+}]]);
+export { e as M, p as R };

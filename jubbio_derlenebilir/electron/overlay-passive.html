@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jubbio Passive Overlay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      background: transparent !important;
+      overflow: hidden;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      user-select: none;
+      -webkit-app-region: no-drag;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #container {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px;
+      pointer-events: none;
+    }
+
+    .participant-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0.4;
+      transition: opacity 0.2s ease;
+    }
+
+    .participant-pill.speaking {
+      opacity: 1;
+    }
+
+    .participant-pill.muted {
+      opacity: 0.35;
+    }
+
+    .participant-pill.deafened {
+      opacity: 0.25;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid transparent;
+      transition: border-color 0.2s ease;
+    }
+
+    .participant-pill.speaking .avatar {
+      border-color: #adff08;
+    }
+
+    .participant-pill.muted .avatar {
+      border-color: #ef4444;
+    }
+
+    .participant-pill.deafened .avatar {
+      border-color: #ef4444;
+    }
+
+    .participant-pill.speaking.muted .avatar {
+      border-color: #adff08;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-initials {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 0.02em;
+    }
+
+    .name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e2e8f0;
+      white-space: nowrap;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .status-icon {
+      width: 14px;
+      height: 14px;
+      display: none;
+    }
+
+    .participant-pill.muted .icon-muted,
+    .participant-pill.deafened .icon-deafened,
+    .participant-pill.camera-on .icon-camera,
+    .participant-pill.screen-sharing .icon-screen {
+      display: block;
+    }
+
+    #chat-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 320px;
+      height: 400px;
+      display: none;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+      pointer-events: none;
+      gap: 4px;
+    }
+
+    #chat-container.active {
+      display: flex;
+    }
+
+    .chat-msg {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 4px 0;
+      animation: chatIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: bottom left;
+      will-change: transform, opacity;
+    }
+
+    @keyframes chatIn {
+      from { opacity: 0; transform: translateY(6px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .chat-msg-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .chat-msg-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .chat-msg-avatar-initials {
+      font-size: 9px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+
+    .chat-msg-body {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .chat-msg-author {
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 0 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.7), 1px 1px 0 rgba(0,0,0,0.8);
+    }
+
+    .chat-msg-content {
+      font-size: 13px;
+      color: #e2e8f0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.4;
+      text-shadow: 0 0 2px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.7), 1px 1px 0 rgba(0,0,0,0.8);
+    }
+
+    .chat-msg-content .overlay-emoji,
+    .chat-msg-content .emoji {
+      display: inline-block;
+      width: 1.2em;
+      height: 1.2em;
+      vertical-align: -0.2em;
+      margin: 0 1px;
+    }
+
+    .chat-msg-image {
+      display: block;
+      max-width: 120px;
+      max-height: 120px;
+      border-radius: 4px;
+      margin-top: 3px;
+      object-fit: contain;
+    }
+
+    .chat-msg-file {
+      display: inline-block;
+      font-size: 11px;
+      color: #94a3b8;
+      background: rgba(30,41,59,0.6);
+      padding: 2px 6px;
+      border-radius: 3px;
+      margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="chat-container"></div>
+
+  <script>
+    // IPC bridge — overlay-preload.cjs tarafından window.electronAPI olarak expose edildi
+    const ipcRenderer = window.electronAPI;
+
+    const container = document.getElementById('container');
+    // Track pills by participant ID
+    const participantPills = new Map(); // id -> element
+
+    function esc(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function initials(name) {
+      if (!name) return '?';
+      return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    }
+
+    function createPill(p) {
+      const el = document.createElement('div');
+      el.className = 'participant-pill';
+      el.dataset.id = String(p.id);
+
+      const avatarContent = p.avatar
+        ? `<img src="${esc(p.avatar)}" alt="" />`
+        : `<span class="avatar-initials">${initials(p.name)}</span>`;
+
+      el.innerHTML = `
+        <div class="avatar">${avatarContent}</div>
+        <span class="name">${esc(p.name)}</span>
+        <div class="status-icons">
+          <svg class="status-icon icon-muted" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2c0 .76-.13 1.49-.35 2.17"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+          <svg class="status-icon icon-deafened" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/><line x1="1" y1="1" x2="23" y2="23"/>
+          </svg>
+          <svg class="status-icon icon-camera" viewBox="0 0 24 24" fill="none" stroke="#adff08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+          </svg>
+          <svg class="status-icon icon-screen" viewBox="0 0 24 24" fill="none" stroke="#adff08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+      `;
+      return el;
+    }
+
+    function renderParticipants(participants) {
+      if (!participants || !participants.length) {
+        // All left — remove everything
+        container.innerHTML = '';
+        participantPills.clear();
+        return;
+      }
+
+      const currentIds = new Set(participants.map(p => String(p.id)));
+
+      // Remove pills for participants no longer in the list (left voice)
+      for (const [id, el] of participantPills) {
+        if (!currentIds.has(id)) {
+          if (el.parentNode) el.parentNode.removeChild(el);
+          participantPills.delete(id);
+        }
+      }
+
+      // Add/update pills for all participants
+      for (const p of participants) {
+        const id = String(p.id);
+        let el = participantPills.get(id);
+
+        if (!el) {
+          // New participant — create pill
+          el = createPill(p);
+          container.appendChild(el);
+          participantPills.set(id, el);
+        }
+
+        // Toggle speaking state
+        if (p.isSpeaking) {
+          el.classList.add('speaking');
+        } else {
+          el.classList.remove('speaking');
+        }
+
+        // Toggle muted/deafened state
+        if (p.isDeafened) {
+          el.classList.add('deafened');
+          el.classList.remove('muted');
+        } else if (p.isMuted) {
+          el.classList.add('muted');
+          el.classList.remove('deafened');
+        } else {
+          el.classList.remove('muted');
+          el.classList.remove('deafened');
+        }
+
+        // Toggle camera/screen sharing state
+        el.classList.toggle('camera-on', !!p.isCameraOn);
+        el.classList.toggle('screen-sharing', !!p.isScreenSharing);
+      }
+    }
+
+    // Listen for state updates from main process
+    ipcRenderer.on('passive-overlay-update', (_e, state) => {
+      renderParticipants(state.participants || []);
+    });
+
+    // Listen for position from interactive overlay
+    ipcRenderer.on('passive-overlay-set-position', (_e, pos) => {
+      if (pos && container) {
+        container.style.bottom = 'auto';
+        container.style.left = pos.x + 'px';
+        container.style.top = pos.y + 'px';
+        localStorage.setItem('overlay-widget-position', JSON.stringify(pos));
+      }
+    });
+
+    // Restore voice widget position from localStorage on load
+    try {
+      const savedWidgetPos = JSON.parse(localStorage.getItem('overlay-widget-position') || 'null');
+      if (savedWidgetPos && container) {
+        container.style.bottom = 'auto';
+        container.style.left = savedWidgetPos.x + 'px';
+        container.style.top = savedWidgetPos.y + 'px';
+      }
+    } catch(e) {}
+
+    // ── Chat Widget ──
+    const chatContainer = document.getElementById('chat-container');
+    const CHAT_MAX_VISIBLE = 30;
+    const CHAT_FADE_TIMEOUT = 15000; // Messages fade after 15s
+
+    let chatEnabled = false;
+
+    // Restore chat position from localStorage
+    try {
+      const savedPos = JSON.parse(localStorage.getItem('overlay-chat-position') || 'null');
+      if (savedPos && chatContainer) {
+        chatContainer.style.bottom = 'auto';
+        chatContainer.style.right = 'auto';
+        chatContainer.style.left = savedPos.x + 'px';
+        chatContainer.style.top = savedPos.y + 'px';
+      }
+      const savedSize = JSON.parse(localStorage.getItem('overlay-chat-size') || 'null');
+      if (savedSize && chatContainer) {
+        if (savedSize.width) chatContainer.style.width = savedSize.width + 'px';
+        if (savedSize.height) chatContainer.style.height = savedSize.height + 'px';
+      }
+    } catch(e) {}
+
+    function escChat(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function chatInitials(name) {
+      if (!name) return '?';
+      return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    }
+
+    function addChatMessage(msg) {
+      if (!chatEnabled) return;
+
+      const el = document.createElement('div');
+      el.className = 'chat-msg';
+
+      const avatarContent = msg.avatar
+        ? `<img src="${escChat(msg.avatar)}" alt="" />`
+        : `<span class="chat-msg-avatar-initials">${chatInitials(msg.displayName)}</span>`;
+
+      const nameColor = msg.color || '#e2e8f0';
+
+      // Build attachment HTML
+      let attachmentHtml = '';
+      if (msg.attachments && msg.attachments.length > 0) {
+        for (const att of msg.attachments) {
+          const isImage = att.content_type && att.content_type.startsWith('image/');
+          if (isImage && att.url) {
+            attachmentHtml += `<img src="${escChat(att.url)}" class="chat-msg-image" alt="${escChat(att.filename)}" loading="lazy" />`;
+          } else {
+            attachmentHtml += `<span class="chat-msg-file">📎 ${escChat(att.filename)}</span>`;
+          }
+        }
+      }
+
+      const contentText = msg.contentHtml || escChat(msg.content || '');
+
+      el.innerHTML = `
+        <div class="chat-msg-avatar">${avatarContent}</div>
+        <div class="chat-msg-body">
+          <span class="chat-msg-author" style="color:${escChat(nameColor)}">${escChat(msg.displayName)}</span>
+          ${contentText ? `<span class="chat-msg-content">${contentText}</span>` : ''}
+          ${attachmentHtml}
+        </div>
+      `;
+
+      chatContainer.appendChild(el);
+
+      // Remove old messages if too many (remove oldest — first child at top)
+      while (chatContainer.children.length > CHAT_MAX_VISIBLE) {
+        chatContainer.removeChild(chatContainer.firstChild);
+      }
+
+      // Auto-fade after timeout
+      setTimeout(() => {
+        el.style.transition = 'opacity 0.5s ease';
+        el.style.opacity = '0';
+        setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 500);
+      }, CHAT_FADE_TIMEOUT);
+    }
+
+    ipcRenderer.on('overlay-chat-config', (_e, config) => {
+      chatEnabled = config && config.enabled;
+      chatContainer.classList.toggle('active', chatEnabled);
+      if (!chatEnabled) {
+        chatContainer.innerHTML = '';
+      }
+    });
+
+    ipcRenderer.on('overlay-chat-message', (_e, msg) => {
+      addChatMessage(msg);
+    });
+
+    ipcRenderer.on('overlay-chat-set-position', (_e, pos) => {
+      if (pos && chatContainer) {
+        chatContainer.style.bottom = 'auto';
+        chatContainer.style.right = 'auto';
+        chatContainer.style.left = pos.x + 'px';
+        chatContainer.style.top = pos.y + 'px';
+        localStorage.setItem('overlay-chat-position', JSON.stringify(pos));
+      }
+    });
+
+    ipcRenderer.on('overlay-chat-set-size', (_e, size) => {
+      if (size && chatContainer) {
+        if (size.width) chatContainer.style.width = size.width + 'px';
+        if (size.height) chatContainer.style.height = size.height + 'px';
+        localStorage.setItem('overlay-chat-size', JSON.stringify(size));
+      }
+    });
+
+    // Notify main process we're ready
+    ipcRenderer.send('passive-overlay-ready');
+  </script>
+</body>
+</html>

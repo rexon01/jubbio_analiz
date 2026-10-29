@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jubbio Overlay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* === Tailwind utility replacements (CDN kaldırıldı) === */
+    :root {
+      --accent: #adff08;
+      --slate-100: #f1f5f9; --slate-200: #e2e8f0; --slate-300: #cbd5e1;
+      --slate-400: #94a3b8; --slate-500: #64748b; --slate-600: #475569;
+      --slate-700: #334155; --slate-800: #1e293b; --slate-900: #0f172a;
+      --slate-950: #020617;
+    }
+
+    /* Layout */
+    .fixed{position:fixed} .absolute{position:absolute} .relative{position:relative}
+    .inset-0{top:0;right:0;bottom:0;left:0}
+    .top-0{top:0} .top-1{top:4px} .top-1\.5{top:6px} .top-3{top:12px}
+    .top-full{top:100%} .top-1\/2{top:50%}
+    .bottom-0{bottom:0} .bottom-6{bottom:24px}
+    .left-0{left:0} .left-1{left:4px} .left-1\/2{left:50%}
+    .right-0{right:0} .right-1{right:4px} .right-1\.5{right:6px}
+    .z-40{z-index:40} .z-50{z-index:50}
+    .z-\[60\]{z-index:60} .z-\[100\]{z-index:100} .z-\[200\]{z-index:200}
+
+    /* Display */
+    .flex{display:flex} .hidden{display:none} .grid{display:grid}
+
+    /* Flex */
+    .flex-col{flex-direction:column}
+    .flex-1{flex:1 1 0%} .flex-shrink-0{flex-shrink:0}
+    .items-start{align-items:flex-start} .items-center{align-items:center}
+    .items-end{align-items:flex-end}
+    .justify-center{justify-content:center} .justify-between{justify-content:space-between}
+    .justify-end{justify-content:flex-end}
+    .gap-0\.5{gap:2px} .gap-1{gap:4px} .gap-1\.5{gap:6px}
+    .gap-2{gap:8px} .gap-3{gap:12px}
+
+    /* Grid */
+    .grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+    /* Overflow */
+    .overflow-hidden{overflow:hidden} .overflow-y-auto{overflow-y:auto}
+
+    /* Pointer events */
+    .pointer-events-none{pointer-events:none} .pointer-events-auto{pointer-events:auto}
+
+    /* Sizing — width */
+    .w-2{width:8px} .w-2\.5{width:10px} .w-3{width:12px} .w-3\.5{width:14px}
+    .w-4{width:16px} .w-5{width:20px} .w-6{width:24px} .w-7{width:28px}
+    .w-8{width:32px} .w-9{width:36px} .w-10{width:40px} .w-11{width:44px}
+    .w-14{width:56px} .w-36{width:144px}
+    .w-px{width:1px} .w-full{width:100%}
+    .w-\[2px\]{width:2px} .w-\[20px\]{width:20px} .w-\[520px\]{width:520px}
+
+    /* Sizing — height */
+    .h-1{height:4px} .h-2{height:8px} .h-2\.5{height:10px} .h-3{height:12px}
+    .h-3\.5{height:14px} .h-4{height:16px} .h-5{height:20px} .h-6{height:24px}
+    .h-7{height:28px} .h-8{height:32px} .h-9{height:36px} .h-10{height:40px}
+    .h-11{height:44px} .h-32{height:128px}
+    .h-px{height:1px} .h-full{height:100%}
+    .h-\[4px\]{height:4px} .h-\[10px\]{height:10px}
+    .max-h-\[70vh\]{max-height:70vh} .min-w-0{min-width:0} .max-w-full{max-width:100%}
+
+    /* Padding */
+    .p-1{padding:4px} .p-1\.5{padding:6px} .p-3{padding:12px}
+    .p-4{padding:16px} .p-px{padding:1px}
+    .px-1{padding-left:4px;padding-right:4px}
+    .px-1\.5{padding-left:6px;padding-right:6px}
+    .px-2{padding-left:8px;padding-right:8px}
+    .px-2\.5{padding-left:10px;padding-right:10px}
+    .px-3{padding-left:12px;padding-right:12px}
+    .px-4{padding-left:16px;padding-right:16px}
+    .py-0\.5{padding-top:2px;padding-bottom:2px}
+    .py-1{padding-top:4px;padding-bottom:4px}
+    .py-1\.5{padding-top:6px;padding-bottom:6px}
+    .py-2{padding-top:8px;padding-bottom:8px}
+    .py-3{padding-top:12px;padding-bottom:12px}
+    .pb-2{padding-bottom:8px}
+    .pt-1{padding-top:4px} .pt-3{padding-top:12px} .pt-4{padding-top:16px}
+
+    /* Margin */
+    .mx-0\.5{margin-left:2px;margin-right:2px}
+    .mx-2{margin-left:8px;margin-right:8px}
+    .mx-2\.5{margin-left:10px;margin-right:10px}
+    .ml-0\.5{margin-left:2px} .ml-2{margin-left:8px}
+    .-ml-1{margin-left:-4px} .-ml-px{margin-left:-1px}
+    .mt-1{margin-top:4px} .mt-4{margin-top:16px}
+
+    /* Backgrounds — solid */
+    .bg-white{background-color:#fff}
+    .bg-slate-700{background-color:#334155}
+    .bg-slate-800{background-color:#1e293b}
+    .bg-slate-900{background-color:#0f172a}
+    .bg-slate-950{background-color:#020617}
+    .bg-green-400{background-color:#4ade80}
+    .bg-red-500{background-color:#ef4444}
+    .bg-accent{background-color:#adff08}
+
+    /* Backgrounds — with opacity */
+    .bg-white\/10{background-color:rgba(255,255,255,.10)}
+    .bg-black\/60{background-color:rgba(0,0,0,.60)}
+    .bg-black\/80{background-color:rgba(0,0,0,.80)}
+    .bg-slate-700\/40{background-color:rgba(51,65,85,.40)}
+    .bg-slate-700\/50{background-color:rgba(51,65,85,.50)}
+    .bg-slate-700\/60{background-color:rgba(51,65,85,.60)}
+    .bg-slate-800\/60{background-color:rgba(30,41,59,.60)}
+    .bg-slate-800\/80{background-color:rgba(30,41,59,.80)}
+    .bg-slate-800\/95{background-color:rgba(30,41,59,.95)}
+    .bg-slate-900\/85{background-color:rgba(15,23,42,.85)}
+    .bg-slate-900\/90{background-color:rgba(15,23,42,.90)}
+    .bg-slate-900\/95{background-color:rgba(15,23,42,.95)}
+    .bg-slate-500\/80{background-color:rgba(100,116,139,.80)}
+    .bg-accent\/10{background-color:rgba(173,255,8,.10)}
+    .bg-accent\/20{background-color:rgba(173,255,8,.20)}
+    .bg-accent\/90{background-color:rgba(173,255,8,.90)}
+    .bg-red-500\/20{background-color:rgba(239,68,68,.20)}
+    .bg-red-500\/30{background-color:rgba(239,68,68,.30)}
+    .bg-yellow-500\/20{background-color:rgba(234,179,8,.20)}
+    .bg-yellow-500\/30{background-color:rgba(234,179,8,.30)}
+    .bg-green-500\/20{background-color:rgba(34,197,94,.20)}
+    .bg-green-500\/30{background-color:rgba(34,197,94,.30)}
+
+    /* Text colors */
+    .text-white{color:#fff} .text-black{color:#000}
+    .text-slate-100{color:#f1f5f9} .text-slate-200{color:#e2e8f0}
+    .text-slate-300{color:#cbd5e1} .text-slate-400{color:#94a3b8}
+    .text-slate-500{color:#64748b}
+    .text-accent{color:#adff08}
+    .text-yellow-400{color:#facc15} .text-green-400{color:#4ade80}
+    .text-red-400{color:#f87171}
+    .text-\[\#e74856\]{color:#e74856}
+
+    /* Font sizes (arbitrary) */
+    .text-\[9px\]{font-size:9px} .text-\[10px\]{font-size:10px}
+    .text-\[11px\]{font-size:11px} .text-\[12px\]{font-size:12px}
+    .text-\[13px\]{font-size:13px}
+
+    /* Font weight */
+    .font-medium{font-weight:500} .font-semibold{font-weight:600}
+    .font-bold{font-weight:700}
+
+    /* Text utilities */
+    .tabular-nums{font-variant-numeric:tabular-nums}
+    .tracking-wide{letter-spacing:0.025em}
+    .truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .uppercase{text-transform:uppercase}
+    .text-center{text-align:center}
+
+    /* Borders */
+    .border{border-width:1px;border-style:solid}
+    .border-2{border-width:2px;border-style:solid}
+    .border-t{border-top-width:1px;border-top-style:solid}
+    .border-slate-600{border-color:#475569}
+    .border-slate-700{border-color:#334155}
+    .border-slate-800{border-color:#1e293b}
+    .border-accent{border-color:#adff08}
+    .border-transparent{border-color:transparent}
+    .border-slate-500\/80{border-color:rgba(100,116,139,.80)}
+    .border-slate-700\/40{border-color:rgba(51,65,85,.40)}
+    .border-slate-700\/60{border-color:rgba(51,65,85,.60)}
+    .border-slate-800\/60{border-color:rgba(30,41,59,.60)}
+    .border-slate-800\/80{border-color:rgba(30,41,59,.80)}
+    .border-accent\/30{border-color:rgba(173,255,8,.30)}
+    .border-t-accent{border-top-color:#adff08}
+
+    /* Shadows */
+    .shadow-lg{box-shadow:0 10px 15px -3px rgba(0,0,0,.10),0 4px 6px -4px rgba(0,0,0,.10)}
+    .shadow-xl{box-shadow:0 20px 25px -5px rgba(0,0,0,.10),0 8px 10px -6px rgba(0,0,0,.10)}
+    .shadow-2xl{box-shadow:0 25px 50px -12px rgba(0,0,0,.25)}
+    .shadow-xl.shadow-black\/30{box-shadow:0 20px 25px -5px rgba(0,0,0,.30),0 8px 10px -6px rgba(0,0,0,.30)}
+    .shadow-2xl.shadow-black\/50{box-shadow:0 25px 50px -12px rgba(0,0,0,.50)}
+    .shadow-2xl.shadow-black\/60{box-shadow:0 25px 50px -12px rgba(0,0,0,.60)}
+    .shadow-xl.shadow-black\/40{box-shadow:0 20px 25px -5px rgba(0,0,0,.40),0 8px 10px -6px rgba(0,0,0,.40)}
+    .shadow-\[0_0_8px_rgba\(173\,255\,8\,0\.15\)\]{box-shadow:0 0 8px rgba(173,255,8,.15)}
+
+    /* Backdrop blur */
+    .backdrop-blur-sm{-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+    .backdrop-blur-md{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+    .backdrop-blur-xl{-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+
+    /* Opacity */
+    .opacity-40{opacity:.40} .opacity-50{opacity:.50} .opacity-60{opacity:.60}
+
+    /* Object fit */
+    .object-contain{object-fit:contain} .object-cover{object-fit:cover}
+
+    /* Aspect ratio */
+    .aspect-video{aspect-ratio:16/9}
+
+    /* Transform */
+    .-translate-x-1\/2{--tw-tx:-50%;transform:translateX(var(--tw-tx,0)) translateY(var(--tw-ty,0))}
+    .-translate-y-1\/2{--tw-ty:-50%;transform:translateX(var(--tw-tx,0)) translateY(var(--tw-ty,0))}
+
+    /* Cursor */
+    .cursor-pointer{cursor:pointer} .cursor-grab{cursor:grab}
+    .active\:cursor-grabbing:active{cursor:grabbing}
+
+    /* Transitions */
+    .transition-all{transition:all 150ms cubic-bezier(.4,0,.2,1)}
+    .transition-colors{transition:color,background-color,border-color 150ms cubic-bezier(.4,0,.2,1)}
+    .transition-opacity{transition:opacity 150ms cubic-bezier(.4,0,.2,1)}
+    .transition-transform{transition:transform 150ms cubic-bezier(.4,0,.2,1)}
+    .duration-100{transition-duration:100ms}
+    .duration-150{transition-duration:150ms}
+    .duration-500{transition-duration:500ms}
+
+    /* Appearance */
+    .appearance-none{appearance:none;-webkit-appearance:none}
+
+    /* Gradient */
+    .bg-gradient-to-t.from-black\/80.via-transparent.to-transparent{
+      background-image:linear-gradient(to top,rgba(0,0,0,.80),transparent,transparent)
+    }
+
+    /* Animation */
+    .animate-spin{animation:spin .6s linear infinite}
+
+    /* Hover states */
+    .hover\:bg-white\/10:hover{background-color:rgba(255,255,255,.10)}
+    .hover\:bg-slate-700:hover{background-color:#334155}
+    .hover\:bg-slate-800:hover{background-color:#1e293b}
+    .hover\:bg-red-500\/20:hover{background-color:rgba(239,68,68,.20)}
+    .hover\:bg-red-500\/30:hover{background-color:rgba(239,68,68,.30)}
+    .hover\:bg-yellow-500\/20:hover{background-color:rgba(234,179,8,.20)}
+    .hover\:bg-yellow-500\/30:hover{background-color:rgba(234,179,8,.30)}
+    .hover\:bg-green-500\/20:hover{background-color:rgba(34,197,94,.20)}
+    .hover\:bg-green-500\/30:hover{background-color:rgba(34,197,94,.30)}
+    .hover\:bg-accent\/90:hover{background-color:rgba(173,255,8,.90)}
+    .hover\:bg-red-600:hover{background-color:#dc2626}
+    .hover\:bg-\[\#c42b1c\]:hover{background-color:#c42b1c}
+    .hover\:border-slate-600:hover{border-color:#475569}
+    .hover\:border-slate-700:hover{border-color:#334155}
+    .hover\:text-white:hover{color:#fff}
+    .hover\:text-slate-300:hover{color:#cbd5e1}
+
+    /* Disabled states */
+    .disabled\:opacity-40:disabled{opacity:.40}
+    .disabled\:cursor-not-allowed:disabled{cursor:not-allowed}
+    /* === End Tailwind utility replacements === */
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      background: rgba(2, 6, 23, 0.45) !important;
+      overflow: hidden;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      user-select: none;
+      -webkit-app-region: no-drag;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .panel-scroll::-webkit-scrollbar { width: 4px; }
+    .panel-scroll::-webkit-scrollbar-track { background: transparent; }
+    .panel-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+    .panel-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+    #server-list::-webkit-scrollbar { height: 0; }
+    .server-icon { transition: background 0.1s ease; }
+    .server-icon.loading { pointer-events: none; opacity: 0.7; }
+    .server-icon.loading .server-spinner { display: flex; }
+    .server-icon.loading img,
+    .server-icon.loading span { opacity: 0.3; }
+    .server-spinner {
+      display: none;
+      position: absolute; inset: 0;
+      align-items: center; justify-content: center;
+    }
+    .server-spinner::after {
+      content: '';
+      width: 14px; height: 14px;
+      border: 2px solid rgba(173,255,8,0.2);
+      border-top-color: #adff08;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .overlay-tooltip {
+      animation: tooltipIn 0.12s ease-out;
+    }
+    @keyframes tooltipIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    #chat-dropdown:not(.hidden) {
+      animation: dropdownIn 0.15s ease-out;
+    }
+    @keyframes dropdownIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════ TOP BAR ══════════ -->
+  <div class="fixed top-0 left-0 right-0 z-40 pointer-events-none flex items-start justify-center pt-4">
+    <div class="pointer-events-auto">
+      <div class="flex items-center bg-slate-900/95 backdrop-blur-md border border-slate-800/80 px-3 py-1.5 shadow-xl shadow-black/30" style="border-radius:12px;">
+
+        <!-- Logo -->
+        <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 413 417" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M90.5933 405.5C14.5933 369.1-1.40668 299.333.09332 269C25.2934 291.8 43.9266 298.833 50.0933 299.5L45.5933 294.5C44.7933 284.5 51.2599 279.333 54.5933 278C66.1933 291.2 78.4266 299.167 83.0933 301.5L81.0933 296.5C85.8933 285.3 100.427 285.5 107.093 287C117.093 322.2 154.26 326 171.593 323.5C156.393 373.1 111.26 398.833 90.5933 405.5Z" fill="#ADFF08"/>
+          <path d="M196.593 314C176.593 384 117.593 404.167 90.5933 405.5C143.526 386.012 165.789 342.768 171.593 323.5C183.993 320.7 193.427 316 196.593 314Z" fill="#408005"/>
+          <path d="M42.5933 265C32.1933 279.8 40.26 290.833 45.5933 294.5C44.7447 284.783 51.3072 279.353 54.5933 278L42.5933 265Z" fill="#408005"/>
+          <path d="M106.093 267.5C75.2933 267.1 76.5933 286.667 81.0933 296.5C85.8933 285.3 100.427 285.5 107.093 287C105.893 284.6 105.927 273 106.093 267.5Z" fill="#408005"/>
+          <path d="M211.593 317C198.393 375 148.427 405.833 125.093 414C255.893 429.6 315.593 359.5 329.093 322.5C344.293 249.3 309.427 182.667 290.093 158.5C339.693 154.5 355.093 120.833 356.593 104.5H412.093C407.693 90.9 371.593 77.5 354.093 72.5C345.693 41.3 320.927 28.1667 309.593 25.5L206.593 0C206.193 15.2 222.76 26.3333 231.093 30C226.293 30 214.093 27.6667 208.593 26.5C208.593 36.1 223.593 50.1667 231.093 56C219.893 64.8 215.427 88.6667 214.593 99.5V285.5C214.593 303.5 212.593 314 211.593 317Z" fill="#ADFF08"/>
+          <circle cx="306.093" cy="78.5" r="18" fill="black"/>
+          <path d="M345.593 131C371.993 122.2 400.927 109.667 412.093 104.5H356.593C355.051 116.702 348.024 128.423 345.593 131Z" fill="#408005"/>
+          <path d="M329.093 322.5C336.543 257.09 329.972 221.064 290.093 158.5C312.825 155.365 323.162 151.583 336.093 141C352.715 236.309 349.228 274.675 329.093 322.5Z" fill="#408005"/>
+        </svg>
+
+        <!-- Server list -->
+        <div id="server-bar" class="hidden">
+          <div class="flex items-center">
+            <div class="w-px h-5 bg-slate-700/60 mx-2.5"></div>
+            <div id="server-list" class="flex items-center gap-1" style="max-width:50vw; overflow-x:auto;"></div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="w-px h-5 bg-slate-700/60 mx-2.5"></div>
+
+        <!-- Clock -->
+        <span id="overlay-clock" class="text-slate-200 text-[12px] font-medium tabular-nums tracking-wide">00:00</span>
+
+        <!-- Battery -->
+        <div id="battery-wrap" class="hidden flex items-center gap-1.5">
+          <div class="w-px h-3.5 bg-slate-700/60 ml-2"></div>
+          <div class="relative flex items-center ml-0.5">
+            <div class="w-[20px] h-[10px] border border-slate-500/80 flex items-center p-px" style="border-radius:2px;">
+              <div id="battery-fill" class="h-full bg-accent" style="border-radius:1px; width:80%;"></div>
+            </div>
+            <div class="w-[2px] h-[4px] bg-slate-500/80 -ml-px" style="border-radius:0 1px 1px 0;"></div>
+          </div>
+          <span id="battery-pct" class="text-slate-400 text-[10px] font-medium tabular-nums">80%</span>
+          <span id="battery-charging" class="hidden">
+            <svg class="w-2.5 h-2.5 text-accent" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </span>
+        </div>
+
+        <!-- Chat Widget Button -->
+        <div class="relative">
+          <div class="w-px h-3.5 bg-slate-700/60 mx-2"></div>
+        </div>
+        <div class="relative">
+          <button id="btn-chat-dropdown" class="w-7 h-7 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all duration-150" style="border-radius:6px;" title="Sohbet Widget">
+            <svg class="w-4 h-4 text-slate-300" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22" opacity="0.5"/><path fill="currentColor" d="M7.825 12.85a.825.825 0 0 0 0 1.65h6.05a.825.825 0 0 0 0-1.65zm0-3.85a.825.825 0 0 0 0 1.65h8.8a.825.825 0 0 0 0-1.65z"/></svg>
+          </button>
+          <!-- Chat Dropdown -->
+          <div id="chat-dropdown" class="absolute top-full right-0 mt-4 hidden z-[60]" style="width:280px;">
+            <div class="bg-slate-900/95 backdrop-blur-md border border-slate-800/80 shadow-2xl shadow-black/50 p-3 flex flex-col gap-3" style="border-radius:10px;">
+              <!-- Header with toggle -->
+              <div class="flex items-center justify-between">
+                <span class="text-slate-200 text-[13px] font-semibold">Sohbet Widget</span>
+                <label class="flex items-center cursor-pointer">
+                  <div id="chat-toggle" class="w-9 h-5 bg-slate-700 flex items-center transition-colors" style="border-radius:10px; padding:2px;">
+                    <div id="chat-toggle-dot" class="w-4 h-4 bg-white shadow transition-transform" style="border-radius:50%; transform:translateX(0);"></div>
+                  </div>
+                </label>
+              </div>
+              <!-- Channel selector (shown when enabled) -->
+              <div id="chat-channel-selector" class="hidden flex flex-col gap-2">
+                <!-- Guild select -->
+                <select id="chat-guild-select" class="w-full h-8 bg-slate-800 border border-slate-700 text-slate-200 text-[12px] px-2 appearance-none cursor-pointer" style="border-radius:6px;">
+                  <option value="">Sunucu seç...</option>
+                </select>
+                <!-- Channel select (shown when guild selected) -->
+                <div id="chat-channel-wrap" class="hidden flex flex-col gap-2">
+                  <select id="chat-channel-select" class="w-full h-8 bg-slate-800 border border-slate-700 text-slate-200 text-[12px] px-2 appearance-none cursor-pointer" style="border-radius:6px;">
+                    <option value="">Kanal seç...</option>
+                  </select>
+                </div>
+                <!-- Info -->
+                <p class="text-slate-500 text-[10px]">Seçilen kanalın mesajları oyundayken ekranda görünecek.</p>
+                <!-- Size controls -->
+                <div class="flex flex-col gap-1.5 mt-1">
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-400 text-[10px]">Genişlik</span>
+                    <span id="chat-width-value" class="text-slate-300 text-[10px] tabular-nums">320px</span>
+                  </div>
+                  <input id="chat-width-slider" type="range" min="200" max="500" value="320" class="w-full h-1 bg-slate-700 appearance-none cursor-pointer" style="border-radius:2px;">
+                  <div class="flex items-center justify-between">
+                    <span class="text-slate-400 text-[10px]">Yükseklik</span>
+                    <span id="chat-height-value" class="text-slate-300 text-[10px] tabular-nums">400px</span>
+                  </div>
+                  <input id="chat-height-slider" type="range" min="150" max="600" value="400" class="w-full h-1 bg-slate-700 appearance-none cursor-pointer" style="border-radius:2px;">
+                </div>
+              </div>
+              <!-- Save/Cancel buttons (shown when changes are made) -->
+              <div id="chat-actions" class="hidden flex items-center justify-end gap-2 pt-1 border-t border-slate-800/60 mt-1">
+                <button id="chat-btn-cancel" class="px-3 py-1.5 text-[11px] text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-colors cursor-pointer" style="border-radius:6px; border:none;">İptal</button>
+                <button id="chat-btn-save" class="px-3 py-1.5 text-[11px] font-semibold text-black bg-accent hover:bg-accent/90 transition-colors cursor-pointer" style="border-radius:6px; border:none;">Kaydet</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ PARTICIPANT PANEL (Game Bar style widget) ══════════ -->
+  <div id="widget" class="fixed pointer-events-auto hidden" style="top:60px; left:24px;">
+    <!-- Outer dashed guide border (shows drop zone) -->
+    <div style="border:2px dashed rgba(148,163,184,0.25); padding:10px; background:rgba(30,41,59,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);">
+      <!-- Inner content card — entire area is draggable -->
+      <div id="widget-header" class="flex flex-col overflow-hidden cursor-grab active:cursor-grabbing" style="border-radius:10px;">
+
+        <!-- Hidden elements (JS references) -->
+        <span id="channel-name" class="hidden">Ses Kanalı</span>
+        <span id="participant-count" class="hidden"></span>
+        <button id="widget-close" class="hidden"></button>
+
+        <!-- Participant list -->
+        <div id="participants" class="flex flex-col panel-scroll" style="max-height:320px; overflow-y:auto;"></div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ══════════ CHAT WIDGET PREVIEW (draggable position marker) ══════════ -->
+  <div id="chat-preview" class="fixed pointer-events-auto hidden" style="bottom:80px; right:24px;">
+    <div style="border:2px dashed rgba(148,163,184,0.25); padding:10px; background:rgba(30,41,59,0.75); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);">
+      <div id="chat-preview-header" class="flex flex-col overflow-hidden cursor-grab active:cursor-grabbing" style="border-radius:10px; width:300px;">
+
+        <!-- Chat channel label -->
+        <div class="flex items-center gap-2 px-1 pb-2">
+          <svg class="w-3.5 h-3.5 text-accent flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12c0 1.6.376 3.112 1.043 4.453c.178.356.237.763.134 1.148l-.595 2.226a1.3 1.3 0 0 0 1.591 1.592l2.226-.596a1.63 1.63 0 0 1 1.149.133A9.96 9.96 0 0 0 12 22" opacity="0.5"/><path fill="currentColor" d="M7.825 12.85a.825.825 0 0 0 0 1.65h6.05a.825.825 0 0 0 0-1.65zm0-3.85a.825.825 0 0 0 0 1.65h8.8a.825.825 0 0 0 0-1.65z"/></svg>
+          <span id="chat-preview-label" class="text-accent text-[11px] font-medium truncate">Sohbet burada görünecek</span>
+        </div>
+
+        <!-- Placeholder messages -->
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-start gap-2">
+            <div class="w-6 h-6 bg-slate-800 flex-shrink-0" style="border-radius:50%;"></div>
+            <div class="flex flex-col gap-0.5 min-w-0">
+              <div class="w-14 h-2.5 bg-slate-700/60" style="border-radius:2px;"></div>
+              <div class="w-36 h-2.5 bg-slate-800/80" style="border-radius:2px;"></div>
+            </div>
+          </div>
+          <div class="flex items-start gap-2">
+            <div class="w-6 h-6 bg-slate-800 flex-shrink-0" style="border-radius:50%;"></div>
+            <div class="flex flex-col gap-0.5 min-w-0">
+              <div class="w-10 h-2.5 bg-slate-700/60" style="border-radius:2px;"></div>
+              <div class="w-24 h-2.5 bg-slate-800/80" style="border-radius:2px;"></div>
+            </div>
+          </div>
+          <div class="flex items-start gap-2 opacity-50">
+            <div class="w-6 h-6 bg-slate-800 flex-shrink-0" style="border-radius:50%;"></div>
+            <div class="flex flex-col gap-0.5 min-w-0">
+              <div class="w-16 h-2.5 bg-slate-700/60" style="border-radius:2px;"></div>
+              <div class="w-28 h-2.5 bg-slate-800/80" style="border-radius:2px;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ FLOATING CONTROL BAR (bottom-center) ══════════ -->
+  <div id="control-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto hidden">
+    <div class="flex items-center bg-slate-900/85 backdrop-blur-xl border border-slate-700/40 shadow-2xl shadow-black/50 p-1.5 gap-1" style="border-radius:16px; height:56px;">
+      <!-- Mic -->
+      <button id="btn-mic" class="w-11 h-11 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all duration-150" style="border-radius:10px 0 0 10px;" title="Mikrofon">
+        <svg id="icon-mic-on" class="w-[20px] h-[20px] text-slate-100" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M4 9a.75.75 0 0 1 .75.75v1a7.25 7.25 0 1 0 14.5 0v-1a.75.75 0 0 1 1.5 0v1a8.75 8.75 0 0 1-8 8.718v2.282a.75.75 0 0 1-1.5 0v-2.282a8.75 8.75 0 0 1-8-8.718v-1A.75.75 0 0 1 4 9" clip-rule="evenodd"/><path fill="currentColor" fill-rule="evenodd" d="M12 2a5.75 5.75 0 0 0-5.75 5.75v3a5.75 5.75 0 0 0 11.5 0v-3A5.75 5.75 0 0 0 12 2m2 9.5a.75.75 0 0 0 0-1.5h-4a.75.75 0 0 0 0 1.5zm-.25-3.75a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 11 7h2a.75.75 0 0 1 .75.75" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M14 11.5a.75.75 0 0 0 0-1.5h-4a.75.75 0 0 0 0 1.5zm-1-3A.75.75 0 0 0 13 7h-2a.75.75 0 0 0 0 1.5z"/></svg>
+        <svg id="icon-mic-off" class="w-[20px] h-[20px] text-red-400 hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M4 9a.75.75 0 0 1 .75.75v1a7.25 7.25 0 1 0 14.5 0v-1a.75.75 0 0 1 1.5 0v1a8.75 8.75 0 0 1-8 8.718v2.282a.75.75 0 0 1-1.5 0v-2.282a8.75 8.75 0 0 1-8-8.718v-1A.75.75 0 0 1 4 9" clip-rule="evenodd"/><path fill="currentColor" fill-rule="evenodd" d="M12 2a5.75 5.75 0 0 0-5.75 5.75v3a5.75 5.75 0 0 0 11.5 0v-3A5.75 5.75 0 0 0 12 2m2 9.5a.75.75 0 0 0 0-1.5h-4a.75.75 0 0 0 0 1.5zm-.25-3.75a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 11 7h2a.75.75 0 0 1 .75.75" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M14 11.5a.75.75 0 0 0 0-1.5h-4a.75.75 0 0 0 0 1.5zm-1-3A.75.75 0 0 0 13 7h-2a.75.75 0 0 0 0 1.5z"/><path fill="currentColor" d="M20 4l-16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <!-- Mic Settings -->
+      <button id="btn-mic-settings" class="w-6 h-11 -ml-1 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all duration-150" style="border-radius:0 10px 10px 0;" title="Ses Ayarları">
+        <svg class="w-3 h-3 text-slate-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="w-px h-6 bg-slate-700/50 mx-0.5"></div>
+
+      <!-- Camera -->
+      <button id="btn-camera" class="w-11 h-11 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all duration-150" style="border-radius:10px;" title="Kamera">
+        <svg id="icon-camera" class="w-[20px] h-[20px] text-slate-200" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m17 9.5l.658-.329c1.946-.973 2.92-1.46 3.63-1.02c.712.44.712 1.528.712 3.703v.292c0 2.176 0 3.263-.711 3.703c-.712.44-1.685-.047-3.63-1.02L17 14.5z"/><path fill="currentColor" fill-rule="evenodd" d="M2.908 5.462C2 6.57 2 8.212 2 11.5v1c0 3.287 0 4.931.908 6.038a4 4 0 0 0 .554.554C4.57 20 6.212 20 9.5 20c3.287 0 4.931 0 6.038-.908q.304-.25.554-.554C17 17.43 17 15.788 17 12.5v-1c0-3.287 0-4.931-.908-6.038a4 4 0 0 0-.554-.554C14.43 4 12.788 4 9.5 4c-3.287 0-4.931 0-6.038.908a4 4 0 0 0-.554.554" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M14 8.5a1.5 1.5 0 1 1-3 0a1.5 1.5 0 0 1 3 0"/></svg>
+      </button>
+      <!-- Camera Settings (kamera aktifken görünür) -->
+      <button id="btn-camera-settings" class="w-6 h-11 hidden -ml-1 items-center justify-center cursor-pointer bg-yellow-500/20 hover:bg-yellow-500/30 transition-all duration-100" style="border-radius:0 10px 10px 0;" title="Kamera Ayarları">
+        <svg class="w-3.5 h-3.5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+
+      <!-- Screen -->
+      <button id="btn-screen" class="w-11 h-11 flex items-center justify-center cursor-pointer hover:bg-white/10 transition-all duration-100 relative" style="border-radius:10px;" title="Ekran Paylaş">
+        <svg id="icon-screen" class="w-[20px] h-[20px] text-slate-200" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16 2h-1c-1.414 0-2.121 0-2.56.44C12 2.878 12 3.585 12 5s0 2.121.44 2.56C12.878 8 13.585 8 15 8h1c1.414 0 2.121 0 2.56-.44c.285-.284.386-.681.42-1.31H19l1.615.673c.627.261.94.391 1.162.243C22 7.018 22 6.678 22 6V4c0-.678 0-1.018-.223-1.166c-.222-.148-.535-.018-1.162.243L19 3.75h-.02c-.035-.629-.135-1.026-.42-1.31C18.122 2 17.415 2 16 2M7.985 17.5c-2.84 0-4.26 0-5.141-.879C2.272 16.052 2.07 15.258 2 14v-1h20v1c-.07 1.258-.272 2.052-.844 2.621c-.882.879-2.301.879-5.14.879h-3.263v4h3.262c.416 0 .753.336.753.75s-.337.75-.753.75h-8.03a.75.75 0 0 1-.753-.75c0-.414.337-.75.753-.75h3.262v-4z"/><path fill="currentColor" d="M22 10v1c0 .552-.006 1.55-.013 2H2c-.007-.45 0-1.448 0-2v-1c0-3.771 0-5.657 1.172-6.828S6.229 2 10 2h.918c-.205.384-.3.786-.35 1.154c-.068.51-.068 1.128-.068 1.764v.164c0 .636 0 1.254.068 1.764c.078.575.266 1.23.81 1.775c.545.545 1.201.733 1.776.81c.51.07 1.128.07 1.764.069h1.164c.636 0 1.254 0 1.764-.068c.575-.078 1.23-.266 1.775-.81q.174-.176.302-.362l.115.048l.057.023c.26.109.59.246.885.321c.233.06.606.122 1.018.027Q22 9.298 22 10" opacity="0.5"/></svg>
+        <div id="screen-live-dot" class="absolute top-1 right-1 w-2 h-2 bg-green-400 hidden" style="border-radius:50%; box-shadow: 0 0 4px rgba(74,222,128,0.6);"></div>
+      </button>
+      <!-- Screen Settings (ekran paylaşımı aktifken görünür) -->
+      <button id="btn-screen-settings" class="w-6 h-11 hidden -ml-1 items-center justify-center cursor-pointer bg-green-500/20 hover:bg-green-500/30 transition-all duration-100" style="border-radius:0 10px 10px 0;" title="Yayın Ayarları">
+        <svg class="w-3.5 h-3.5 text-green-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+
+      <!-- Divider before disconnect -->
+      <div class="w-px h-6 bg-slate-700/50 mx-0.5"></div>
+
+      <!-- Disconnect -->
+      <button id="btn-disconnect" class="w-11 h-11 bg-red-500 hover:bg-red-600 flex items-center justify-center cursor-pointer transition-all duration-150 text-white" style="border-radius:10px;" title="Ayrıl">
+        <svg class="w-[20px] h-[20px]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M15.47 3.47a.75.75 0 0 1 1.06 0L18 4.94l1.47-1.47a.75.75 0 1 1 1.06 1.06L19.06 6l1.47 1.47a.75.75 0 0 1-1.06 1.06L18 7.06l-1.47 1.47a.75.75 0 1 1-1.06-1.06L16.94 6l-1.47-1.47a.75.75 0 0 1 0-1.06" clip-rule="evenodd"/><path fill="currentColor" d="m10.038 5.316l.649 1.163c.585 1.05.35 2.426-.572 3.349c0 0-1.12 1.119.91 3.148c2.027 2.027 3.146.91 3.147.91c.923-.923 2.3-1.158 3.349-.573l1.163.65c1.585.884 1.772 3.106.379 4.5c-.837.836-1.863 1.488-2.996 1.53c-1.908.073-5.149-.41-8.4-3.66c-3.25-3.251-3.733-6.492-3.66-8.4c.043-1.133.694-2.159 1.53-2.996c1.394-1.393 3.616-1.206 4.5.38" opacity="0.5"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════ SOURCE PICKER MODAL ══════════ -->
+  <div id="source-modal" class="fixed inset-0 z-[100] hidden pointer-events-auto">
+    <!-- Backdrop -->
+    <div id="source-modal-backdrop" class="absolute inset-0 bg-black/60"></div>
+    <!-- Panel -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] max-h-[70vh] flex flex-col bg-slate-900 border border-slate-800 shadow-2xl shadow-black/60 overflow-hidden" style="border-radius:8px;">
+      <!-- Header -->
+      <div class="flex items-center justify-between h-10 px-4 bg-slate-800 flex-shrink-0" style="border-radius:8px 8px 0 0;">
+        <span id="source-modal-title" class="text-[13px] font-semibold text-slate-200">Ekranı Paylaş</span>
+        <button id="source-modal-close" class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#c42b1c] transition-colors" style="border-radius:4px; border:none; background:none; cursor:pointer;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <!-- Tabs -->
+      <div id="source-tabs" class="flex gap-1 px-3 pt-3 pb-2 flex-shrink-0">
+        <button data-tab="applications" class="source-tab flex-1 flex items-center justify-center gap-1.5 py-2 text-[12px] font-medium transition-all" style="border-radius:6px;">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+          Uygulamalar
+        </button>
+        <button data-tab="screens" class="source-tab flex-1 flex items-center justify-center gap-1.5 py-2 text-[12px] font-medium transition-all" style="border-radius:6px;">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          Ekranlar
+        </button>
+        <button data-tab="camera" class="source-tab flex-1 flex items-center justify-center gap-1.5 py-2 text-[12px] font-medium transition-all" style="border-radius:6px;">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          Kamera
+        </button>
+      </div>
+      <!-- Source grid -->
+      <div id="source-grid" class="flex-1 overflow-y-auto px-3 pb-2 panel-scroll" style="max-height:340px;"></div>
+      <!-- Footer -->
+      <div class="flex items-center justify-between px-4 py-3 border-t border-slate-800 flex-shrink-0">
+        <label id="audio-toggle-wrap" class="flex items-center gap-2 cursor-pointer">
+          <div id="audio-toggle" class="w-9 h-5 bg-slate-700 flex items-center transition-colors" style="border-radius:10px; padding:2px;">
+            <div id="audio-toggle-dot" class="w-4 h-4 bg-white shadow transition-transform" style="border-radius:50%; transform:translateX(0);"></div>
+          </div>
+          <span class="text-[12px] text-slate-400">Sesi Paylaş</span>
+        </label>
+        <div class="flex gap-2">
+          <button id="source-modal-cancel" class="px-3 py-1.5 text-[12px] text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 transition-colors" style="border-radius:6px; border:none; cursor:pointer;">İptal</button>
+          <button id="source-modal-share" class="px-4 py-1.5 text-[12px] font-semibold text-black bg-accent hover:bg-accent/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed" style="border-radius:6px; border:none; cursor:pointer;" disabled>Paylaş</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shortcut hint -->
+  <div id="shortcut-hint" class="fixed top-3 left-1/2 -translate-x-1/2 z-50 pointer-events-none px-3 py-1.5 bg-slate-900/90 backdrop-blur-sm border border-slate-800/60 text-slate-400 text-[10px] font-medium tracking-wide transition-opacity duration-500 shadow-lg" style="border-radius:8px;">
+    ESC veya Shift+` ile kapat
+  </div>
+
+  <script>
+    // IPC bridge — overlay-preload.cjs tarafından window.electronAPI olarak expose edildi
+    const ipcRenderer = window.electronAPI;
+
+    // ── State & dirty check ──
+    let currentState = { participants: [], channelName: '', isMuted: false, isCameraOn: false, isScreenSharing: false };
+    let lastPHash = '', lastCHash = '';
+
+    // ── DOM ──
+    const widget = document.getElementById('widget');
+    const widgetHeader = document.getElementById('widget-header');
+    const channelNameEl = document.getElementById('channel-name');
+    const countEl = document.getElementById('participant-count');
+    const participantsEl = document.getElementById('participants');
+    const controlBar = document.getElementById('control-bar');
+    const btnMic = document.getElementById('btn-mic');
+    const btnMicSettings = document.getElementById('btn-mic-settings');
+    const btnCamera = document.getElementById('btn-camera');
+    const btnCamSettings = document.getElementById('btn-camera-settings');
+    const btnScreen = document.getElementById('btn-screen');
+    const btnScrSettings = document.getElementById('btn-screen-settings');
+    const btnDisconnect = document.getElementById('btn-disconnect');
+    const iconMicOn = document.getElementById('icon-mic-on');
+    const iconMicOff = document.getElementById('icon-mic-off');
+    const iconCamera = document.getElementById('icon-camera');
+    const iconScreen = document.getElementById('icon-screen');
+    const hint = document.getElementById('shortcut-hint');
+    const serverBar = document.getElementById('server-bar');
+    const serverListEl = document.getElementById('server-list');
+
+    setTimeout(() => { hint.style.opacity = '0'; }, 3000);
+    setTimeout(() => { hint.remove(); }, 3600);
+
+    // ── Participant icons ──
+    const MIC_ICON = '<svg class="w-4 h-4 text-slate-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M4 9a.75.75 0 0 1 .75.75v1a7.25 7.25 0 1 0 14.5 0v-1a.75.75 0 0 1 1.5 0v1a8.75 8.75 0 0 1-8 8.718v2.282a.75.75 0 0 1-1.5 0v-2.282a8.75 8.75 0 0 1-8-8.718v-1A.75.75 0 0 1 4 9" clip-rule="evenodd"/><path fill="currentColor" fill-rule="evenodd" d="M12 2a5.75 5.75 0 0 0-5.75 5.75v3a5.75 5.75 0 0 0 11.5 0v-3A5.75 5.75 0 0 0 12 2" clip-rule="evenodd" opacity="0.5"/></svg>';
+    const MIC_OFF_ICON = '<svg class="w-4 h-4 text-[#e74856] flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M4 9a.75.75 0 0 1 .75.75v1a7.25 7.25 0 1 0 14.5 0v-1a.75.75 0 0 1 1.5 0v1a8.75 8.75 0 0 1-8 8.718v2.282a.75.75 0 0 1-1.5 0v-2.282a8.75 8.75 0 0 1-8-8.718v-1A.75.75 0 0 1 4 9" clip-rule="evenodd"/><path fill="currentColor" fill-rule="evenodd" d="M12 2a5.75 5.75 0 0 0-5.75 5.75v3a5.75 5.75 0 0 0 11.5 0v-3A5.75 5.75 0 0 0 12 2" clip-rule="evenodd" opacity="0.5"/><line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    const MIC_SPEAK_ICON = '<svg class="w-4 h-4 text-accent flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M4 9a.75.75 0 0 1 .75.75v1a7.25 7.25 0 1 0 14.5 0v-1a.75.75 0 0 1 1.5 0v1a8.75 8.75 0 0 1-8 8.718v2.282a.75.75 0 0 1-1.5 0v-2.282a8.75 8.75 0 0 1-8-8.718v-1A.75.75 0 0 1 4 9" clip-rule="evenodd"/><path fill="currentColor" fill-rule="evenodd" d="M12 2a5.75 5.75 0 0 0-5.75 5.75v3a5.75 5.75 0 0 0 11.5 0v-3A5.75 5.75 0 0 0 12 2" clip-rule="evenodd" opacity="0.5"/></svg>';
+    const DEAFEN_ICON = '<svg class="w-4 h-4 text-[#e74856] flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75v2.793a.75.75 0 0 1 1 .707v2a.75.75 0 0 1-1.5 0V17h-1v-5a8.25 8.25 0 0 0-16.5 0v5h-1v.5a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 1 1-.707z" clip-rule="evenodd" opacity="0.5"/><path fill="currentColor" d="M8 14.05c0-.85 0-1.274-.21-1.57a1.2 1.2 0 0 0-.409-.358c-.325-.174-.763-.134-1.64-.053c-1.48.134-2.218.202-2.748.571a2.35 2.35 0 0 0-.661.7C2 13.885 2 14.6 2 16.03v1.74c0 1.417 0 2.126.338 2.673c.127.205.286.39.471.547c.495.423 1.217.555 2.662.818c1.016.186 1.525.279 1.9.083q.209-.11.36-.287C8 21.285 8 20.786 8 19.789zm8 0c0-.85 0-1.274.21-1.57c.105-.148.245-.271.409-.358c.325-.174.763-.134 1.64-.053c1.48.134 2.218.202 2.748.571c.268.188.493.426.661.7c.332.544.332 1.26.332 2.69v1.74c0 1.417 0 2.126-.338 2.673c-.127.205-.286.39-.471.547c-.495.423-1.217.555-2.662.818c-1.016.186-1.525.279-1.9.083a1.2 1.2 0 0 1-.36-.287C16 21.285 16 20.786 16 19.789z"/><path fill="none" d="M20 4l-16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+
+    function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+    function initials(n) { return n ? n.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase() : '?'; }
+    function pHash(s) { return !s.participants ? '' : s.participants.map(p=>p.id+':'+p.isSpeaking+':'+p.isMuted+':'+p.name+':'+(p.avatar||'')).join('|'); }
+    function cHash(s) { return [s.isMuted,s.isCameraOn,s.isScreenSharing].join(':'); }
+    function gHash(s) {
+      const gh = !s.guilds ? '' : s.guilds.map(g=>g.id+':'+g.name+':'+(g.avatar_url||'')).join('|');
+      const lh = !s.guildLayout ? '' : JSON.stringify(s.guildLayout);
+      return gh + '##' + lh;
+    }
+    let lastGHash = '';
+
+    // ── Controls (dirty-checked) ──
+    function updateControls(s) {
+      const h = cHash(s); if (h === lastCHash) return; lastCHash = h;
+      const m = s.isMuted, c = s.isCameraOn, sc = s.isScreenSharing;
+
+      // Mic button
+      btnMic.className = 'w-11 h-11 flex items-center justify-center cursor-pointer transition-all duration-150 ' + (m ? 'bg-red-500/20 hover:bg-red-500/30' : 'hover:bg-white/10');
+      btnMic.style.borderRadius = '10px 0 0 10px';
+      iconMicOn.classList.toggle('hidden', m);
+      iconMicOff.classList.toggle('hidden', !m);
+      // Mic settings chevron adapts to mute state
+      btnMicSettings.className = 'w-6 h-11 -ml-1 flex items-center justify-center cursor-pointer transition-all duration-150 ' + (m ? 'hover:bg-red-500/20' : 'hover:bg-white/10');
+      btnMicSettings.style.borderRadius = '0 10px 10px 0';
+
+      // Camera button
+      btnCamera.className = 'w-11 h-11 flex items-center justify-center cursor-pointer transition-all duration-100 ' + (c ? 'bg-yellow-500/20 hover:bg-yellow-500/30' : 'hover:bg-white/10');
+      btnCamera.style.borderRadius = c ? '10px 0 0 10px' : '10px';
+      iconCamera.className = 'w-[20px] h-[20px] ' + (c ? 'text-yellow-400' : 'text-slate-200');
+      // Camera settings button visibility
+      if (c) { btnCamSettings.classList.remove('hidden'); btnCamSettings.classList.add('flex'); }
+      else { btnCamSettings.classList.add('hidden'); btnCamSettings.classList.remove('flex'); }
+
+      // Screen button
+      btnScreen.className = 'w-11 h-11 flex items-center justify-center cursor-pointer transition-all duration-100 relative ' + (sc ? 'bg-green-500/20 hover:bg-green-500/30' : 'hover:bg-white/10');
+      btnScreen.style.borderRadius = sc ? '10px 0 0 10px' : '10px';
+      iconScreen.className = 'w-[20px] h-[20px] ' + (sc ? 'text-green-400' : 'text-slate-200');
+      document.getElementById('screen-live-dot').classList.toggle('hidden', !sc);
+      // Screen settings button visibility
+      if (sc) { btnScrSettings.classList.remove('hidden'); btnScrSettings.classList.add('flex'); }
+      else { btnScrSettings.classList.add('hidden'); btnScrSettings.classList.remove('flex'); }
+    }
+
+    // ── Participants (dirty-checked) ──
+    function renderParticipants(s) {
+      const h = pHash(s); if (h === lastPHash) return; lastPHash = h;
+      channelNameEl.textContent = s.channelName || 'Ses Kanalı';
+      const list = s.participants || [];
+      countEl.textContent = list.length ? list.length + ' kişi' : '';
+      if (!list.length) { participantsEl.innerHTML = ''; return; }
+
+      let html = '';
+      for (const p of list) {
+        const speaking = p.isSpeaking, muted = p.isMuted;
+        let rowCls = 'flex items-center gap-3';
+        // Konuşmuyorsa (muted veya sessiz) saydam olsun
+        if (!speaking) rowCls += ' opacity-60';
+        const avatarBorder = speaking ? 'border-2 border-accent' : 'border-2 border-transparent';
+        const avatarInner = p.avatar
+          ? '<img src="'+esc(p.avatar)+'" class="w-full h-full object-cover" alt="" />'
+          : '<span class="text-[11px] font-bold text-slate-400">'+initials(p.name)+'</span>';
+        const nameColor = 'text-slate-200';
+        // İkonlar: deafen, muted, kamera, ekran paylaşımı
+        let icons = '';
+        if (p.isDeafened) icons += DEAFEN_ICON;
+        else if (muted) icons += MIC_OFF_ICON;
+        if (p.isCameraOn) icons += '<svg class="w-4 h-4 text-yellow-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m17 9.5l.658-.329c1.946-.973 2.92-1.46 3.63-1.02c.712.44.712 1.528.712 3.703v.292c0 2.176 0 3.263-.711 3.703c-.712.44-1.685-.047-3.63-1.02L17 14.5z"/><path fill="currentColor" fill-rule="evenodd" d="M2.908 5.462C2 6.57 2 8.212 2 11.5v1c0 3.287 0 4.931.908 6.038a4 4 0 0 0 .554.554C4.57 20 6.212 20 9.5 20c3.287 0 4.931 0 6.038-.908q.304-.25.554-.554C17 17.43 17 15.788 17 12.5v-1c0-3.287 0-4.931-.908-6.038a4 4 0 0 0-.554-.554C14.43 4 12.788 4 9.5 4c-3.287 0-4.931 0-6.038.908a4 4 0 0 0-.554.554" clip-rule="evenodd" opacity="0.5"/></svg>';
+        if (p.isScreenSharing) icons += '<span class="flex-shrink-0 px-1.5 py-0.5 bg-red-500 text-white text-[9px] font-bold uppercase" style="border-radius:3px;">CANLI</span>';
+        html += '<div class="'+rowCls+'">' +
+          '<div class="w-8 h-8 bg-slate-800 flex items-center justify-center flex-shrink-0 overflow-hidden '+avatarBorder+'" style="border-radius:50%;">'+avatarInner+'</div>' +
+          '<div class="flex flex-col flex-1 min-w-0"><span class="text-[13px] font-medium '+nameColor+' truncate">'+esc(p.name)+'</span></div>' +
+          '<div class="flex items-center gap-1.5">'+icons+'</div></div>';
+      }
+      participantsEl.innerHTML = html;
+    }
+
+    // ── Guilds (server bar) ──
+    let tooltipEl = null;
+    let expandedFolders = {}; // folder toggle state
+
+    function showTooltip(target, text) {
+      hideTooltip();
+      tooltipEl = document.createElement('div');
+      tooltipEl.className = 'overlay-tooltip fixed z-[200] px-2.5 py-1 bg-slate-800/95 backdrop-blur-sm border border-slate-700/60 text-slate-100 text-[11px] font-medium shadow-xl shadow-black/40 pointer-events-none';
+      tooltipEl.style.borderRadius = '8px';
+      tooltipEl.style.whiteSpace = 'nowrap';
+      tooltipEl.style.letterSpacing = '0.01em';
+      tooltipEl.textContent = text;
+      document.body.appendChild(tooltipEl);
+      const r = target.getBoundingClientRect();
+      const tw = tooltipEl.offsetWidth;
+      tooltipEl.style.left = Math.max(4, r.left + r.width/2 - tw/2) + 'px';
+      tooltipEl.style.top = (r.bottom + 8) + 'px';
+    }
+    function hideTooltip() {
+      if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
+    }
+
+    function guildById(id) {
+      return (currentState.guilds || []).find(g => g.id === id);
+    }
+
+    function renderGuildIcon(g, size) {
+      if (!g) return '';
+      const sz = size || 8;
+      const px = sz * 4;
+      const ini = initials(g.name);
+      const rad = Math.round(px * 0.22);
+      const inner = g.avatar_url
+        ? '<img src="'+esc(g.avatar_url)+'" class="w-full h-full object-cover" style="border-radius:'+rad+'px;" alt="" />'
+        : '<span style="font-size:'+(px*0.3)+'px;font-weight:600;color:#94a3b8;letter-spacing:0.02em;">'+ini+'</span>';
+      return '<div class="server-icon flex-shrink-0 flex items-center justify-center cursor-pointer overflow-hidden" style="border-radius:'+rad+'px;width:'+px+'px;height:'+px+'px;background:#1e293b;position:relative;" data-guild-id="'+esc(g.id)+'" data-guild-name="'+esc(g.name)+'">'
+        + inner + '<div class="server-spinner"></div></div>';
+    }
+
+    function renderFolderPreview(children, color) {
+      const previews = children.slice(0, 4);
+      let grid = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5px;padding:3px;">';
+      for (let i = 0; i < 4; i++) {
+        const g = previews[i] ? guildById(previews[i].id) : null;
+        const r = i===0?'3px 1px 1px 1px':i===1?'1px 3px 1px 1px':i===2?'1px 1px 1px 3px':'1px 1px 3px 1px';
+        if (g && g.avatar_url) {
+          grid += '<div style="width:13px;height:13px;overflow:hidden;border-radius:'+r+';background:#1e293b;"><img src="'+esc(g.avatar_url)+'" style="width:100%;height:100%;object-fit:cover;" alt="" /></div>';
+        } else if (g) {
+          grid += '<div style="width:13px;height:13px;overflow:hidden;border-radius:'+r+';background:#1e293b;display:flex;align-items:center;justify-content:center;"><span style="font-size:6px;font-weight:700;color:#94a3b8;">'+initials(g.name).charAt(0)+'</span></div>';
+        } else {
+          grid += '<div style="width:13px;height:13px;border-radius:'+r+';background:transparent;"></div>';
+        }
+      }
+      grid += '</div>';
+      return grid;
+    }
+
+    function renderGuilds(s) {
+      const h = gHash(s); if (h === lastGHash) return; lastGHash = h;
+      const guilds = s.guilds || [];
+      const layout = s.guildLayout || [];
+      if (!guilds.length) { serverBar.classList.add('hidden'); return; }
+      serverBar.classList.remove('hidden');
+
+      let html = '';
+      if (layout.length > 0) {
+        for (const item of layout) {
+          if (item.type === 'folder' && item.children && item.children.length > 0) {
+            const color = item.color || '#6366f1';
+            const isOpen = !!expandedFolders[item.id];
+            const fname = esc(item.name || 'Klasör');
+
+            if (isOpen) {
+              // Expanded folder
+              html += '<div class="flex-shrink-0 flex items-center gap-1 px-1 py-0.5" style="border-radius:10px;background:'+esc(color)+'15;border:1px solid '+esc(color)+'30;" data-folder-toggle="'+esc(item.id)+'" data-folder-name="'+fname+'">';
+              // Folder toggle button
+              html += '<div class="flex-shrink-0 flex items-center justify-center cursor-pointer overflow-hidden" style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,'+esc(color)+'35,'+esc(color)+'15);border:1.5px solid '+esc(color)+';" data-folder-btn="'+esc(item.id)+'" data-folder-name="'+fname+'">';
+              html += renderFolderPreview(item.children, color);
+              html += '</div>';
+              for (const child of item.children) {
+                const g = guildById(child.id);
+                if (g) html += renderGuildIcon(g, 8);
+              }
+              html += '</div>';
+            } else {
+              // Collapsed folder
+              html += '<div class="flex-shrink-0 flex items-center justify-center cursor-pointer overflow-hidden" style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,'+esc(color)+'25,'+esc(color)+'10);border:1.5px solid '+esc(color)+'50;" data-folder-btn="'+esc(item.id)+'" data-folder-name="'+fname+'">';
+              html += renderFolderPreview(item.children, color);
+              html += '</div>';
+            }
+          } else if (item.type === 'guild') {
+            const g = guildById(item.id);
+            if (g) html += renderGuildIcon(g, 8);
+          }
+        }
+      } else {
+        for (const g of guilds) html += renderGuildIcon(g, 8);
+      }
+
+      serverListEl.innerHTML = html;
+      bindGuildEvents();
+    }
+
+    let loadingGuildId = null;
+
+    function bindGuildEvents() {
+      serverListEl.querySelectorAll('.server-icon').forEach(el => {
+        el.addEventListener('mouseenter', () => { if (!el.classList.contains('loading')) showTooltip(el, el.dataset.guildName); });
+        el.addEventListener('mouseleave', hideTooltip);
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const gid = el.dataset.guildId;
+          if (!gid || loadingGuildId) return;
+          loadingGuildId = gid;
+          el.classList.add('loading');
+          hideTooltip();
+          ipcRenderer.send('overlay-navigate-server', gid);
+        });
+      });
+      serverListEl.querySelectorAll('[data-folder-btn]').forEach(el => {
+        el.addEventListener('mouseenter', () => showTooltip(el, el.dataset.folderName));
+        el.addEventListener('mouseleave', hideTooltip);
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const fid = el.dataset.folderBtn;
+          expandedFolders[fid] = !expandedFolders[fid];
+          lastGHash = '';
+          renderGuilds(currentState);
+        });
+      });
+    }
+
+    // Navigate done — overlay kapanacak, loading state'i temizle
+    ipcRenderer.on('overlay-navigate-done', () => {
+      loadingGuildId = null;
+      serverListEl.querySelectorAll('.server-icon.loading').forEach(el => el.classList.remove('loading'));
+    });
+
+    // ── Drag ──
+    let dragging = false, dx = 0, dy = 0;
+    widgetHeader.addEventListener('mousedown', e => {
+      dragging = true;
+      const r = widget.getBoundingClientRect();
+      dx = e.clientX - r.left; dy = e.clientY - r.top;
+      widget.style.transition = 'none'; e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      widget.style.left = Math.max(0, Math.min(innerWidth - widget.offsetWidth, e.clientX - dx)) + 'px';
+      widget.style.top = Math.max(0, Math.min(innerHeight - widget.offsetHeight, e.clientY - dy)) + 'px';
+    });
+    document.addEventListener('mouseup', () => {
+      if (dragging) {
+        dragging = false;
+        widget.style.transition = '';
+        // Save position for passive overlay
+        const rect = widget.getBoundingClientRect();
+        const pos = { x: rect.left, y: rect.top };
+        ipcRenderer.send('overlay-widget-position', pos);
+        localStorage.setItem('overlay-widget-position', JSON.stringify(pos));
+      }
+    });
+
+    ipcRenderer.on('overlay-set-widget-position', (_e, pos) => {
+      if (pos && widget) {
+        widget.style.left = pos.x + 'px';
+        widget.style.top = pos.y + 'px';
+        localStorage.setItem('overlay-widget-position', JSON.stringify(pos));
+      }
+    });
+
+    // Restore widget position from localStorage on load
+    try {
+      const savedPos = JSON.parse(localStorage.getItem('overlay-widget-position') || 'null');
+      if (savedPos && widget) {
+        widget.style.left = savedPos.x + 'px';
+        widget.style.top = savedPos.y + 'px';
+      }
+    } catch(e) {}
+
+    // ── Button handlers ──
+    btnMic.onclick = () => ipcRenderer.send('overlay-control', 'toggle-mic');
+    btnMicSettings.onclick = () => ipcRenderer.send('overlay-control', 'open-settings');
+    btnCamera.onclick = () => {
+      if (currentState.isCameraOn) {
+        ipcRenderer.send('overlay-control', 'toggle-camera');
+      } else {
+        openSourceModal('camera');
+      }
+    };
+    btnCamSettings.onclick = () => ipcRenderer.send('overlay-control', 'open-camera-quality');
+    btnScreen.onclick = () => {
+      if (currentState.isScreenSharing) {
+        ipcRenderer.send('overlay-control', 'toggle-screen');
+      } else {
+        openSourceModal('applications');
+      }
+    };
+    btnScrSettings.onclick = () => ipcRenderer.send('overlay-control', 'open-screen-quality');
+    btnDisconnect.onclick = () => ipcRenderer.send('overlay-control', 'disconnect');
+    document.getElementById('widget-close').onclick = () => ipcRenderer.send('overlay-close');
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (!sourceModal.classList.contains('hidden')) { closeSourceModal(); }
+        else if (!chatDropdown.classList.contains('hidden')) { closeChatDropdown(); }
+        else { ipcRenderer.send('overlay-close'); }
+      }
+    });
+
+    // Boşluğa tıklayınca overlay'i kapat
+    document.body.addEventListener('click', (e) => {
+      if (e.target === document.body || e.target === document.documentElement) {
+        ipcRenderer.send('overlay-close');
+      }
+    });
+
+    // ══════════ SOURCE PICKER MODAL LOGIC ══════════
+    const sourceModal = document.getElementById('source-modal');
+    const sourceGrid = document.getElementById('source-grid');
+    const sourceModalTitle = document.getElementById('source-modal-title');
+    const shareBtn = document.getElementById('source-modal-share');
+    const audioToggle = document.getElementById('audio-toggle');
+    const audioToggleDot = document.getElementById('audio-toggle-dot');
+    const audioToggleWrap = document.getElementById('audio-toggle-wrap');
+
+    let modalActiveTab = 'applications';
+    let modalSelectedId = null;
+    let modalShareAudio = true;
+    let modalSources = { windows: [], screens: [] };
+    let modalCameras = [];
+
+    // Audio toggle
+    updateAudioToggleUI();
+    audioToggleWrap.onclick = () => {
+      modalShareAudio = !modalShareAudio;
+      updateAudioToggleUI();
+    };
+    function updateAudioToggleUI() {
+      audioToggle.style.background = modalShareAudio ? '#adff08' : '#334155';
+      audioToggleDot.style.transform = modalShareAudio ? 'translateX(16px)' : 'translateX(0)';
+    }
+
+    // Tab switching
+    document.querySelectorAll('.source-tab').forEach(btn => {
+      btn.onclick = () => {
+        modalActiveTab = btn.dataset.tab;
+        modalSelectedId = null;
+        shareBtn.disabled = true;
+        updateTabUI();
+        renderSources();
+      };
+    });
+
+    function updateTabUI() {
+      document.querySelectorAll('.source-tab').forEach(t => {
+        const active = t.dataset.tab === modalActiveTab;
+        t.className = 'source-tab flex-1 flex items-center justify-center gap-1.5 py-2 text-[12px] font-medium transition-all ' +
+          (active ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-slate-300 hover:bg-slate-800');
+      });
+      audioToggleWrap.style.display = modalActiveTab === 'camera' ? 'none' : 'flex';
+      sourceModalTitle.textContent = modalActiveTab === 'camera' ? 'Kamera Seç' : 'Ekranı Paylaş';
+    }
+
+    async function fetchSources() {
+      try {
+        const results = await ipcRenderer.invoke('get-screen-sources', ['window', 'screen']);
+        modalSources.windows = results.filter(s => s.id.startsWith('window:'));
+        modalSources.screens = results.filter(s => s.id.startsWith('screen:'));
+      } catch (e) { console.error('Failed to fetch sources:', e); }
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        modalCameras = devices.filter(d => d.kind === 'videoinput');
+      } catch (e) { modalCameras = []; }
+    }
+
+    function renderSources() {
+      let items = [];
+      if (modalActiveTab === 'applications') items = modalSources.windows;
+      else if (modalActiveTab === 'screens') items = modalSources.screens;
+      else if (modalActiveTab === 'camera') { renderCameras(); return; }
+
+      if (!items.length) {
+        sourceGrid.innerHTML = '<div class="flex items-center justify-center h-32 text-slate-500 text-[12px]">Kaynak bulunamadı</div>';
+        return;
+      }
+
+      let html = '<div class="grid grid-cols-2 gap-2">';
+      for (const s of items) {
+        const sel = s.id === modalSelectedId;
+        html += '<button data-source-id="'+esc(s.id)+'" class="source-item relative group cursor-pointer overflow-hidden transition-all border-2 '
+          + (sel ? 'border-accent shadow-[0_0_8px_rgba(173,255,8,0.15)]' : 'border-transparent hover:border-slate-700')
+          + '" style="border-radius:6px;">'
+          + '<div class="aspect-video bg-slate-950 relative">'
+          + (s.thumbnail ? '<img src="'+esc(s.thumbnail)+'" class="w-full h-full object-contain bg-slate-950" />' : '')
+          + '<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>'
+          + '<div class="absolute bottom-0 left-0 right-0 p-1.5"><div class="flex items-center gap-1">'
+          + (s.appIcon ? '<img src="'+esc(s.appIcon)+'" class="w-3 h-3" style="border-radius:2px;" />' : '')
+          + '<span class="text-white text-[10px] font-medium truncate">'+esc(s.name)+'</span>'
+          + '</div></div>'
+          + (sel ? '<div class="absolute top-1.5 right-1.5 w-4 h-4 bg-accent flex items-center justify-center" style="border-radius:50%;"><svg class="w-2.5 h-2.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>' : '')
+          + '</div></button>';
+      }
+      html += '</div>';
+      sourceGrid.innerHTML = html;
+      sourceGrid.querySelectorAll('.source-item').forEach(el => {
+        el.onclick = () => { modalSelectedId = el.dataset.sourceId; shareBtn.disabled = false; renderSources(); };
+      });
+    }
+
+    function renderCameras() {
+      if (!modalCameras.length) {
+        sourceGrid.innerHTML = '<div class="flex items-center justify-center h-32 text-slate-500 text-[12px]">Kamera bulunamadı</div>';
+        return;
+      }
+      let html = '<div class="grid grid-cols-2 gap-2">';
+      for (const d of modalCameras) {
+        const sel = d.deviceId === modalSelectedId;
+        html += '<button data-device-id="'+esc(d.deviceId)+'" class="camera-item relative cursor-pointer overflow-hidden transition-all p-4 border-2 '
+          + (sel ? 'bg-accent/10 border-accent shadow-[0_0_8px_rgba(173,255,8,0.15)]' : 'bg-slate-800 border-transparent hover:bg-slate-700 hover:border-slate-600')
+          + '" style="border-radius:6px;">'
+          + '<div class="flex flex-col items-center justify-center gap-1.5">'
+          + '<span class="flex w-10 h-10 items-center justify-center '+(sel ? 'bg-accent/20' : 'bg-slate-700')+'" style="border-radius:8px;">'
+          + '<svg class="w-5 h-5 '+(sel ? 'text-accent' : 'text-slate-400')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>'
+          + '</span>'
+          + '<span class="text-[10px] font-medium text-center truncate max-w-full '+(sel ? 'text-accent' : 'text-slate-300')+'">'+(esc(d.label) || 'Kamera')+'</span>'
+          + '</div>'
+          + (sel ? '<div class="absolute top-1.5 right-1.5 w-4 h-4 bg-accent flex items-center justify-center" style="border-radius:50%;"><svg class="w-2.5 h-2.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div>' : '')
+          + '</button>';
+      }
+      html += '</div>';
+      sourceGrid.innerHTML = html;
+      sourceGrid.querySelectorAll('.camera-item').forEach(el => {
+        el.onclick = () => { modalSelectedId = el.dataset.deviceId; shareBtn.disabled = false; renderCameras(); };
+      });
+    }
+
+    async function openSourceModal(tab) {
+      modalActiveTab = tab;
+      modalSelectedId = null;
+      shareBtn.disabled = true;
+      modalShareAudio = true;
+      updateAudioToggleUI();
+      updateTabUI();
+      sourceGrid.innerHTML = '<div class="flex items-center justify-center h-32"><div class="w-5 h-5 border-2 border-accent/30 border-t-accent animate-spin" style="border-radius:50%;"></div></div>';
+      sourceModal.classList.remove('hidden');
+      await fetchSources();
+      renderSources();
+    }
+
+    function closeSourceModal() {
+      sourceModal.classList.add('hidden');
+      sourceGrid.innerHTML = '';
+      modalSelectedId = null;
+    }
+
+    document.getElementById('source-modal-close').onclick = closeSourceModal;
+    document.getElementById('source-modal-cancel').onclick = closeSourceModal;
+    document.getElementById('source-modal-backdrop').onclick = closeSourceModal;
+
+    shareBtn.onclick = () => {
+      if (!modalSelectedId) return;
+      if (modalActiveTab === 'camera') {
+        ipcRenderer.send('overlay-control', 'share-camera:' + modalSelectedId);
+      } else {
+        ipcRenderer.send('overlay-control', 'share-screen:' + modalSelectedId + ':' + modalShareAudio);
+      }
+      closeSourceModal();
+    };
+
+    // ── IPC ──
+    ipcRenderer.on('overlay-update', (_e, state) => {
+      currentState = { ...currentState, ...state };
+      const connected = currentState.participants && currentState.participants.length > 0;
+      widget.classList.toggle('hidden', !connected);
+      controlBar.classList.toggle('hidden', !connected);
+      if (connected) { renderParticipants(currentState); updateControls(currentState); }
+      renderGuilds(currentState);
+      // Update chat widget guild list
+      updateChatGuilds(currentState.guilds);
+    });
+    ipcRenderer.on('overlay-position', () => {});
+
+    // ── Saat ──
+    const clockEl = document.getElementById('overlay-clock');
+    function updateClock() {
+      const now = new Date();
+      clockEl.textContent = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    }
+    updateClock();
+    setInterval(updateClock, 10000);
+
+    // ── Pil ──
+    const batteryWrap = document.getElementById('battery-wrap');
+    const batteryFill = document.getElementById('battery-fill');
+    const batteryPct = document.getElementById('battery-pct');
+    const batteryCharging = document.getElementById('battery-charging');
+
+    if (navigator.getBattery) {
+      navigator.getBattery().then(batt => {
+        function updateBattery() {
+          const pct = Math.round(batt.level * 100);
+          batteryWrap.classList.remove('hidden');
+          batteryWrap.classList.add('flex');
+          batteryFill.style.width = pct + '%';
+          batteryPct.textContent = pct + '%';
+          if (pct <= 15) { batteryFill.className = 'h-full bg-red-400'; batteryFill.style.borderRadius = '1px'; }
+          else if (pct <= 35) { batteryFill.className = 'h-full bg-yellow-400'; batteryFill.style.borderRadius = '1px'; }
+          else { batteryFill.className = 'h-full bg-accent'; batteryFill.style.borderRadius = '1px'; }
+          batteryCharging.classList.toggle('hidden', !batt.charging);
+        }
+        updateBattery();
+        batt.addEventListener('levelchange', updateBattery);
+        batt.addEventListener('chargingchange', updateBattery);
+      }).catch(() => {});
+    }
+
+    // ══════════ CHAT WIDGET SETTINGS ══════════
+    const chatDropdown = document.getElementById('chat-dropdown');
+    const btnChatDropdown = document.getElementById('btn-chat-dropdown');
+    const chatToggle = document.getElementById('chat-toggle');
+    const chatToggleDot = document.getElementById('chat-toggle-dot');
+    const chatChannelSelector = document.getElementById('chat-channel-selector');
+    const chatGuildSelect = document.getElementById('chat-guild-select');
+    const chatChannelSelect = document.getElementById('chat-channel-select');
+    const chatChannelWrap = document.getElementById('chat-channel-wrap');
+    const chatPreview = document.getElementById('chat-preview');
+    const chatPreviewHeader = document.getElementById('chat-preview-header');
+    const chatPreviewLabel = document.getElementById('chat-preview-label');
+
+    // Dropdown toggle
+    btnChatDropdown.onclick = (e) => {
+      e.stopPropagation();
+      if (chatDropdown.classList.contains('hidden')) {
+        chatDropdown.classList.remove('hidden');
+      } else {
+        closeChatDropdown();
+      }
+    };
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!chatDropdown.contains(e.target) && e.target !== btnChatDropdown && !btnChatDropdown.contains(e.target)) {
+        if (!chatDropdown.classList.contains('hidden')) {
+          closeChatDropdown();
+        }
+      }
+    });
+
+    // Revert unsaved changes when dropdown closes without saving
+    function closeChatDropdown() {
+      if (chatIsDirty()) {
+        // Revert to initial (API) state
+        chatWidgetEnabled = chatInitialState.enabled;
+        chatSelectedGuild = chatInitialState.guildId;
+        chatSelectedChannel = chatInitialState.channelId;
+        chatSelectedChannelName = chatInitialState.channelName;
+        chatWidth = chatInitialState.width;
+        chatHeight = chatInitialState.height;
+        // Update UI
+        updateChatToggleUI();
+        chatChannelSelector.classList.toggle('hidden', !chatWidgetEnabled);
+        chatPreview.classList.toggle('hidden', !chatWidgetEnabled);
+        if (chatSelectedGuild) {
+          chatGuildSelect.value = chatSelectedGuild;
+          chatChannelWrap.classList.remove('hidden');
+          chatChannelWrap.classList.add('flex');
+          // Re-request channels for the original guild
+          ipcRenderer.send('overlay-chat-request-channels', chatSelectedGuild);
+        } else {
+          chatGuildSelect.value = '';
+          chatChannelWrap.classList.add('hidden');
+          chatChannelWrap.classList.remove('flex');
+        }
+        if (chatSelectedChannel) chatChannelSelect.value = chatSelectedChannel;
+        chatPreviewLabel.textContent = chatSelectedChannelName ? '#' + chatSelectedChannelName : 'Sohbet burada görünecek';
+        // Revert sliders
+        chatWidthSlider.value = chatWidth;
+        chatWidthValue.textContent = chatWidth + 'px';
+        chatHeightSlider.value = chatHeight;
+        chatHeightValue.textContent = chatHeight + 'px';
+        chatPreviewHeader.style.width = chatWidth + 'px';
+        chatPreviewHeader.style.height = chatHeight + 'px';
+        ipcRenderer.send('overlay-chat-size', { width: chatWidth, height: chatHeight });
+        // Send reverted config to main process
+        sendChatConfig();
+        updateChatActions();
+      }
+      chatDropdown.classList.add('hidden');
+    }
+
+    let chatWidgetEnabled = false;
+    let chatSelectedGuild = '';
+    let chatSelectedChannel = '';
+    let chatSelectedChannelName = '';
+    let chatWidth = 320;
+    let chatHeight = 400;
+
+    // Restore from localStorage
+    try {
+      const saved = JSON.parse(localStorage.getItem('overlay-chat-state') || 'null');
+      if (saved) {
+        chatWidgetEnabled = saved.enabled || false;
+        chatSelectedGuild = saved.guildId || '';
+        chatSelectedChannel = saved.channelId || '';
+        chatSelectedChannelName = saved.channelName || '';
+        chatWidth = saved.width || 320;
+        chatHeight = saved.height || 400;
+      }
+    } catch(e) {}
+
+    // Persist to localStorage
+    function saveChatState() {
+      localStorage.setItem('overlay-chat-state', JSON.stringify({
+        enabled: chatWidgetEnabled,
+        guildId: chatSelectedGuild,
+        channelId: chatSelectedChannel,
+        channelName: chatSelectedChannelName,
+        width: chatWidth,
+        height: chatHeight,
+      }));
+    }
+
+    function updateChatToggleUI() {
+      chatToggle.style.background = chatWidgetEnabled ? '#adff08' : '#334155';
+      chatToggleDot.style.transform = chatWidgetEnabled ? 'translateX(16px)' : 'translateX(0)';
+      // Update top bar button color when chat is enabled
+      const btnIcon = btnChatDropdown.querySelector('svg');
+      if (btnIcon) btnIcon.className = 'w-4 h-4 ' + (chatWidgetEnabled ? 'text-accent' : 'text-slate-300');
+    }
+
+    // Size sliders
+    const chatWidthSlider = document.getElementById('chat-width-slider');
+    const chatHeightSlider = document.getElementById('chat-height-slider');
+    const chatWidthValue = document.getElementById('chat-width-value');
+    const chatHeightValue = document.getElementById('chat-height-value');
+
+    chatWidthSlider.oninput = () => {
+      chatWidth = parseInt(chatWidthSlider.value);
+      chatWidthValue.textContent = chatWidth + 'px';
+      chatPreviewHeader.style.width = chatWidth + 'px';
+      ipcRenderer.send('overlay-chat-size', { width: chatWidth, height: chatHeight });
+      updateChatActions();
+    };
+    chatHeightSlider.oninput = () => {
+      chatHeight = parseInt(chatHeightSlider.value);
+      chatHeightValue.textContent = chatHeight + 'px';
+      chatPreviewHeader.style.height = chatHeight + 'px';
+      ipcRenderer.send('overlay-chat-size', { width: chatWidth, height: chatHeight });
+      updateChatActions();
+    };
+
+    function sendChatConfig() {
+      saveChatState();
+      ipcRenderer.send('overlay-control', 'chat-config:' + JSON.stringify({
+        enabled: chatWidgetEnabled,
+        guildId: chatSelectedGuild || null,
+        channelId: chatSelectedChannel || null,
+        channelName: chatSelectedChannelName || null,
+        width: chatWidth,
+        height: chatHeight,
+      }));
+    }
+
+    // ── Save/Cancel & Dirty State ──
+    const chatActions = document.getElementById('chat-actions');
+    const chatBtnSave = document.getElementById('chat-btn-save');
+    const chatBtnCancel = document.getElementById('chat-btn-cancel');
+
+    // Snapshot of initial state (from /me settings) to detect changes
+    let chatInitialState = {
+      enabled: chatWidgetEnabled,
+      guildId: chatSelectedGuild,
+      channelId: chatSelectedChannel,
+      channelName: chatSelectedChannelName,
+      width: chatWidth,
+      height: chatHeight,
+    };
+
+    function chatIsDirty() {
+      return chatWidgetEnabled !== chatInitialState.enabled ||
+        chatSelectedGuild !== chatInitialState.guildId ||
+        chatSelectedChannel !== chatInitialState.channelId ||
+        chatWidth !== chatInitialState.width ||
+        chatHeight !== chatInitialState.height;
+    }
+
+    function updateChatActions() {
+      if (chatIsDirty()) {
+        chatActions.classList.remove('hidden');
+        chatActions.classList.add('flex');
+      } else {
+        chatActions.classList.add('hidden');
+        chatActions.classList.remove('flex');
+      }
+    }
+
+    // Override sendChatConfig to also check dirty state
+    const _origSendChatConfig = sendChatConfig;
+    // Patch: after every config change, update action buttons
+    function sendChatConfigWithDirty() {
+      _origSendChatConfig();
+      updateChatActions();
+    }
+    // Re-bind toggle
+    chatToggle.parentElement.onclick = () => {
+      chatWidgetEnabled = !chatWidgetEnabled;
+      updateChatToggleUI();
+      chatChannelSelector.classList.toggle('hidden', !chatWidgetEnabled);
+      chatPreview.classList.toggle('hidden', !chatWidgetEnabled);
+      sendChatConfigWithDirty();
+    };
+    // Re-bind guild select
+    chatGuildSelect.onchange = () => {
+      chatSelectedGuild = chatGuildSelect.value;
+      chatSelectedChannel = '';
+      chatChannelSelect.innerHTML = '<option value="">Kanal seç...</option>';
+      if (chatSelectedGuild) {
+        chatChannelWrap.classList.remove('hidden');
+        chatChannelWrap.classList.add('flex');
+        ipcRenderer.send('overlay-chat-request-channels', chatSelectedGuild);
+      } else {
+        chatChannelWrap.classList.add('hidden');
+        chatChannelWrap.classList.remove('flex');
+      }
+      sendChatConfigWithDirty();
+    };
+    // Re-bind channel select
+    chatChannelSelect.onchange = () => {
+      chatSelectedChannel = chatChannelSelect.value;
+      chatSelectedChannelName = chatChannelSelect.options[chatChannelSelect.selectedIndex]?.text || '';
+      chatPreviewLabel.textContent = chatSelectedChannelName ? '#' + chatSelectedChannelName : 'Sohbet burada görünecek';
+      sendChatConfigWithDirty();
+    };
+
+    // Save button — persist to API via main process
+    chatBtnSave.onclick = () => {
+      ipcRenderer.send('overlay-chat-save-settings');
+      chatInitialState = {
+        enabled: chatWidgetEnabled,
+        guildId: chatSelectedGuild,
+        channelId: chatSelectedChannel,
+        channelName: chatSelectedChannelName,
+        width: chatWidth,
+        height: chatHeight,
+      };
+      updateChatActions();
+      chatDropdown.classList.add('hidden');
+    };
+
+    // Cancel button — revert to initial state
+    chatBtnCancel.onclick = () => {
+      closeChatDropdown();
+    };
+
+    // When overlay receives initial config from main (from /me settings), update initial state
+    ipcRenderer.on('overlay-chat-initial-settings', (_e, config) => {
+      if (!config) return;
+      chatInitialState = {
+        enabled: config.enabled || false,
+        guildId: config.guildId || '',
+        channelId: config.channelId || '',
+        channelName: config.channelName || '',
+        width: config.width || 320,
+        height: config.height || 400,
+      };
+      // Also apply as current state
+      chatWidgetEnabled = chatInitialState.enabled;
+      chatSelectedGuild = chatInitialState.guildId;
+      chatSelectedChannel = chatInitialState.channelId;
+      chatSelectedChannelName = chatInitialState.channelName;
+      chatWidth = chatInitialState.width;
+      chatHeight = chatInitialState.height;
+      updateChatToggleUI();
+      chatChannelSelector.classList.toggle('hidden', !chatWidgetEnabled);
+      chatPreview.classList.toggle('hidden', !chatWidgetEnabled);
+      if (chatSelectedGuild) {
+        chatGuildSelect.value = chatSelectedGuild;
+        chatChannelWrap.classList.remove('hidden');
+        chatChannelWrap.classList.add('flex');
+        ipcRenderer.send('overlay-chat-request-channels', chatSelectedGuild);
+      }
+      if (chatSelectedChannel) chatChannelSelect.value = chatSelectedChannel;
+      chatPreviewLabel.textContent = chatSelectedChannelName ? '#' + chatSelectedChannelName : 'Sohbet burada görünecek';
+      // Update sliders
+      chatWidthSlider.value = chatWidth;
+      chatWidthValue.textContent = chatWidth + 'px';
+      chatHeightSlider.value = chatHeight;
+      chatHeightValue.textContent = chatHeight + 'px';
+      chatPreviewHeader.style.width = chatWidth + 'px';
+      chatPreviewHeader.style.height = chatHeight + 'px';
+      updateChatActions();
+    });
+
+    // Populate guilds from overlay state
+    function updateChatGuilds(guilds) {
+      if (!guilds || !guilds.length) return;
+      const current = chatGuildSelect.value || chatSelectedGuild;
+      chatGuildSelect.innerHTML = '<option value="">Sunucu seç...</option>';
+      for (const g of guilds) {
+        const opt = document.createElement('option');
+        opt.value = g.id;
+        opt.textContent = g.name;
+        chatGuildSelect.appendChild(opt);
+      }
+      // Restore selected guild (from config that arrived before guild list)
+      if (current) {
+        chatGuildSelect.value = current;
+        // If guild is selected, show channel wrap and request channels
+        if (chatGuildSelect.value === current) {
+          chatChannelWrap.classList.remove('hidden');
+          chatChannelWrap.classList.add('flex');
+          // Request channels if we don't have them yet
+          if (chatChannelSelect.options.length <= 1) {
+            ipcRenderer.send('overlay-chat-request-channels', current);
+          }
+        }
+      }
+    }
+
+    // Receive channel list from main process
+    ipcRenderer.on('overlay-chat-channels', (_e, channels) => {
+      chatChannelSelect.innerHTML = '<option value="">Kanal seç...</option>';
+      for (const ch of channels) {
+        const opt = document.createElement('option');
+        opt.value = ch.id;
+        opt.textContent = ch.name;
+        chatChannelSelect.appendChild(opt);
+      }
+      if (chatSelectedChannel) chatChannelSelect.value = chatSelectedChannel;
+    });
+
+    // Receive config from main process (restore state)
+    ipcRenderer.on('overlay-chat-config', (_e, config) => {
+      if (!config) return;
+      chatWidgetEnabled = config.enabled || false;
+      chatSelectedGuild = config.guildId || '';
+      chatSelectedChannel = config.channelId || '';
+      chatSelectedChannelName = config.channelName || '';
+      chatWidth = config.width || 320;
+      chatHeight = config.height || 400;
+      // Also update initial state (this is the source of truth from API/store)
+      chatInitialState = {
+        enabled: chatWidgetEnabled,
+        guildId: chatSelectedGuild,
+        channelId: chatSelectedChannel,
+        channelName: chatSelectedChannelName,
+        width: chatWidth,
+        height: chatHeight,
+      };
+      updateChatToggleUI();
+      chatChannelSelector.classList.toggle('hidden', !chatWidgetEnabled);
+      chatPreview.classList.toggle('hidden', !chatWidgetEnabled);
+      if (chatSelectedGuild) {
+        chatGuildSelect.value = chatSelectedGuild;
+        chatChannelWrap.classList.remove('hidden');
+        chatChannelWrap.classList.add('flex');
+      } else {
+        chatChannelWrap.classList.add('hidden');
+        chatChannelWrap.classList.remove('flex');
+      }
+      if (chatSelectedChannel) chatChannelSelect.value = chatSelectedChannel;
+      chatPreviewLabel.textContent = chatSelectedChannelName ? '#' + chatSelectedChannelName : 'Sohbet burada görünecek';
+      // Update sliders
+      chatWidthSlider.value = chatWidth;
+      chatWidthValue.textContent = chatWidth + 'px';
+      chatHeightSlider.value = chatHeight;
+      chatHeightValue.textContent = chatHeight + 'px';
+      chatPreviewHeader.style.width = chatWidth + 'px';
+      chatPreviewHeader.style.height = chatHeight + 'px';
+      updateChatActions();
+    });
+
+    // Chat preview drag
+    let chatDragging = false, chatDx = 0, chatDy = 0;
+    chatPreviewHeader.addEventListener('mousedown', e => {
+      chatDragging = true;
+      const r = chatPreview.getBoundingClientRect();
+      chatDx = e.clientX - r.left; chatDy = e.clientY - r.top;
+      chatPreview.style.transition = 'none'; e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!chatDragging) return;
+      chatPreview.style.left = Math.max(0, Math.min(innerWidth - chatPreview.offsetWidth, e.clientX - chatDx)) + 'px';
+      chatPreview.style.top = Math.max(0, Math.min(innerHeight - chatPreview.offsetHeight, e.clientY - chatDy)) + 'px';
+      chatPreview.style.bottom = 'auto';
+      chatPreview.style.right = 'auto';
+    });
+    document.addEventListener('mouseup', () => {
+      if (chatDragging) {
+        chatDragging = false;
+        chatPreview.style.transition = '';
+        const rect = chatPreview.getBoundingClientRect();
+        ipcRenderer.send('overlay-chat-position', { x: rect.left, y: rect.top });
+      }
+    });
+
+    // Restore chat widget UI from localStorage on load
+    updateChatToggleUI();
+    chatChannelSelector.classList.toggle('hidden', !chatWidgetEnabled);
+    chatPreview.classList.toggle('hidden', !chatWidgetEnabled);
+    if (chatSelectedGuild) {
+      chatGuildSelect.value = chatSelectedGuild;
+      chatChannelWrap.classList.remove('hidden');
+      chatChannelWrap.classList.add('flex');
+    }
+    if (chatSelectedChannel) chatChannelSelect.value = chatSelectedChannel;
+    chatPreviewLabel.textContent = chatSelectedChannelName ? '#' + chatSelectedChannelName : 'Sohbet burada görünecek';
+    // Send saved config to main process on load
+    if (chatWidgetEnabled) {
+      sendChatConfig();
+      if (chatSelectedGuild) {
+        ipcRenderer.send('overlay-chat-request-channels', chatSelectedGuild);
+      }
+    }
+
+    ipcRenderer.send('overlay-ready');
+  </script>
+</body>
+</html>

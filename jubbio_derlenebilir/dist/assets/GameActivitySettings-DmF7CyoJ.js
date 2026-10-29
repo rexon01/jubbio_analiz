@@ -1,0 +1,406 @@
+import { r as _0x1094fd, b as _0x6fdfc3, d5 as _0x263a45, d6 as _0x4ee4b6, fq as _0x1bf205, j as _0x49f366, P as _0x1afb9a, I as _0x49bf35 } from "./index-cQfEKR1W.js";
+import { S as _0x4b0ce4 } from "./switch-lfnbGePn.js";
+import { S as _0x5d478e } from "./separator-Ba6vNTx4.js";
+const d = ({
+  className: _0x5419e6
+}) => _0x49f366.jsx(_0x49bf35, {
+  icon: "solar:gamepad-bold-duotone",
+  className: _0x5419e6
+});
+const o = ({
+  className: _0x2525f5
+}) => _0x49f366.jsx(_0x49bf35, {
+  icon: "solar:eye-bold-duotone",
+  className: _0x2525f5
+});
+const x = ({
+  className: _0x252547
+}) => _0x49f366.jsx(_0x49bf35, {
+  icon: "solar:eye-closed-bold-duotone",
+  className: _0x252547
+});
+const u = ({
+  className: _0x119357
+}) => _0x49f366.jsx(_0x49bf35, {
+  icon: "solar:magnifer-bold-duotone",
+  className: _0x119357
+});
+const g = ({
+  className: _0x3c3574
+}) => _0x49f366.jsx(_0x49bf35, {
+  icon: "solar:clock-circle-bold-duotone",
+  className: _0x3c3574
+});
+const y = ({
+  className: _0x42c86a
+}) => _0x49f366.jsx(_0x49bf35, {
+  icon: "solar:monitor-bold-duotone",
+  className: _0x42c86a
+});
+const f = ({
+  className: _0x825e3a
+}) => _0x49f366.jsx(_0x49bf35, {
+  icon: "solar:danger-circle-bold-duotone",
+  className: _0x825e3a
+});
+const j = ({
+  className: _0x11e475
+}) => _0x49f366.jsx(_0x49bf35, {
+  icon: "solar:refresh-bold-duotone",
+  className: _0x11e475
+});
+const h = _0x1094fd.forwardRef(({
+  onDirtyChange: _0x599e29
+}, _0x130881) => {
+  const {
+    t: _0xf43c3e
+  } = _0x6fdfc3();
+  const {
+    showActivity: _0x2051cc,
+    gameSettings: _0x52ea91,
+    currentGame: _0x418231,
+    gameStartTime: _0x11b257,
+    isScanning: _0x240ebe,
+    fetchSettings: _0x4f3f0c,
+    toggleActivityAPI: _0x442507,
+    toggleGameVisibilityAPI: _0x5c46cf
+  } = _0x263a45();
+  const [_0x3424ab, _0x26d361] = _0x1094fd.useState(true);
+  const [_0x40a902, _0x1f48c0] = _0x1094fd.useState("");
+  const [_0x58e113, _0x5c3831] = _0x1094fd.useState([]);
+  const [_0x4f979d, _0x4f2e63] = _0x1094fd.useState(false);
+  const _0x4f0f94 = _0x1094fd.useRef(null);
+  const _0x2bdbdd = typeof window != "undefined" && !!window.electron;
+  _0x1094fd.useEffect(() => {
+    (async () => {
+      _0x26d361(true);
+      await _0x4f3f0c();
+      _0x26d361(false);
+    })();
+  }, [_0x4f3f0c]);
+  _0x1094fd.useEffect(() => {
+    if (_0x2051cc && _0x2bdbdd) {
+      _0x4ee4b6.start();
+    } else {
+      _0x4ee4b6.stop();
+    }
+    return () => {};
+  }, [_0x2051cc, _0x2bdbdd]);
+  _0x1094fd.useEffect(() => {
+    if (_0x40a902.trim()) {
+      if (_0x4f0f94.current) {
+        clearTimeout(_0x4f0f94.current);
+      }
+      _0x4f0f94.current = setTimeout(async () => {
+        _0x4f2e63(true);
+        try {
+          const _0x29e87f = await _0x1bf205.searchGames(_0x40a902, 10);
+          _0x5c3831(_0x29e87f);
+        } catch {
+          _0x5c3831([]);
+        } finally {
+          _0x4f2e63(false);
+        }
+      }, 300);
+      return () => {
+        if (_0x4f0f94.current) {
+          clearTimeout(_0x4f0f94.current);
+        }
+      };
+    }
+    _0x5c3831([]);
+  }, [_0x40a902]);
+  _0x1094fd.useImperativeHandle(_0x130881, () => ({
+    getValues: () => ({}),
+    markPristine: () => {},
+    reset: () => {},
+    save: async () => true
+  }));
+  _0x1094fd.useEffect(() => {
+    _0x599e29?.(false);
+  }, [_0x599e29]);
+  const _0xe54227 = _0x1094fd.useCallback(async _0x485084 => {
+    await _0x442507(_0x485084);
+  }, [_0x442507]);
+  const _0xe6ca34 = _0x1094fd.useCallback(async (_0x5889b7, _0x247f3d) => {
+    await _0x5c46cf(_0x5889b7, _0x247f3d);
+  }, [_0x5c46cf]);
+  if (_0x3424ab) {
+    return _0x49f366.jsx("div", {
+      className: "flex items-center justify-center py-20",
+      children: _0x49f366.jsx(j, {
+        className: "size-6 animate-spin text-text-muted"
+      })
+    });
+  } else {
+    return _0x49f366.jsxs("div", {
+      className: "space-y-8",
+      children: [_0x49f366.jsxs("section", {
+        children: [_0x49f366.jsxs("div", {
+          className: "mb-4 sm:mb-5",
+          children: [_0x49f366.jsxs("div", {
+            className: "flex items-center gap-2",
+            children: [_0x49f366.jsx(d, {
+              className: "size-4 text-text-tertiary"
+            }), _0x49f366.jsx("div", {
+              className: "text-base font-semibold text-text-secondary",
+              children: _0xf43c3e("settings.showGameActivity", "Oyun aktivitesini göster")
+            })]
+          }), _0x49f366.jsx("p", {
+            className: "text-sm text-text-muted mt-0.5",
+            children: _0xf43c3e("settings.gameActivityDesc", "Oyun aktivitenizi yönetin. Hangi oyunları oynadığınız diğer kullanıcılara gösterilsin.")
+          })]
+        }), _0x49f366.jsx("div", {
+          className: "rounded-xl bg-surface-overlay/40 border border-border-default overflow-hidden",
+          children: _0x49f366.jsxs("div", {
+            role: "button",
+            tabIndex: 0,
+            onClick: () => _0xe54227(!_0x2051cc),
+            onKeyDown: _0x4947fa => _0x4947fa.key === "Enter" && _0xe54227(!_0x2051cc),
+            className: "group/vs w-full flex items-center justify-between px-4 py-3 text-left transition-colors hover:bg-surface-overlay/50 active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/50 focus-visible:ring-inset rounded-xl cursor-pointer",
+            children: [_0x49f366.jsxs("div", {
+              className: "flex items-start gap-3 flex-1 min-w-0 pr-3",
+              children: [_0x49f366.jsx("span", {
+                className: "flex size-8 shrink-0 items-center justify-center rounded-lg bg-surface-inset mt-0.5",
+                children: _0x49f366.jsx(o, {
+                  className: "size-4 text-text-secondary"
+                })
+              }), _0x49f366.jsxs("div", {
+                children: [_0x49f366.jsx("span", {
+                  className: "text-[15px] font-medium text-text-secondary block",
+                  children: _0xf43c3e("settings.showGameActivity", "Oyun aktivitesini göster")
+                }), _0x49f366.jsx("p", {
+                  className: "text-[13px] text-text-tertiary mt-0.5 max-w-md",
+                  children: _0xf43c3e("settings.showGameActivityDesc", "Diğer kullanıcılar hangi oyunu oynadığınızı görebilir.")
+                })]
+              })]
+            }), _0x49f366.jsx(_0x4b0ce4, {
+              checked: _0x2051cc,
+              onCheckedChange: _0xe54227,
+              onClick: _0xf71567 => _0xf71567.stopPropagation()
+            })]
+          })
+        }), _0x418231 && _0x49f366.jsx("div", {
+          className: "mt-4 rounded-xl border border-border-default bg-surface-overlay/40 p-4",
+          children: _0x49f366.jsxs("div", {
+            className: "flex items-center gap-3",
+            children: [_0x418231.cover_url ? _0x49f366.jsx("img", {
+              src: _0x418231.cover_url,
+              alt: _0x418231.name,
+              className: "size-12 rounded-lg object-cover"
+            }) : _0x49f366.jsx("div", {
+              className: "size-12 rounded-lg bg-surface-inset flex items-center justify-center",
+              children: _0x49f366.jsx(d, {
+                className: "size-6 text-text-muted"
+              })
+            }), _0x49f366.jsxs("div", {
+              className: "flex-1 min-w-0",
+              children: [_0x49f366.jsxs("div", {
+                className: "flex items-center gap-2",
+                children: [_0x49f366.jsx("span", {
+                  className: "size-2 rounded-full bg-green-500 animate-pulse"
+                }), _0x49f366.jsx("span", {
+                  className: "text-sm font-medium text-text-primary truncate",
+                  children: _0xf43c3e("settings.currentlyPlaying", "Şu an oynuyor")
+                })]
+              }), _0x49f366.jsx("p", {
+                className: "text-base font-semibold text-text-primary truncate mt-0.5",
+                children: _0x418231.name
+              }), _0x11b257 && _0x49f366.jsxs("div", {
+                className: "flex items-center gap-1 mt-1",
+                children: [_0x49f366.jsx(g, {
+                  className: "size-3 text-text-muted"
+                }), _0x49f366.jsx("span", {
+                  className: "text-xs text-text-muted",
+                  children: (_0x4b5883 => {
+                    if (!_0x4b5883) {
+                      return "";
+                    }
+                    const _0x534181 = Math.floor((Date.now() - _0x4b5883) / 1000);
+                    const _0x5cb85f = Math.floor(_0x534181 / 3600);
+                    const _0x26c2b5 = Math.floor(_0x534181 % 3600 / 60);
+                    if (_0x5cb85f > 0) {
+                      return _0x5cb85f + "h " + _0x26c2b5 + "m";
+                    } else {
+                      return _0x26c2b5 + "m";
+                    }
+                  })(_0x11b257)
+                })]
+              })]
+            })]
+          })
+        }), !_0x2bdbdd && _0x49f366.jsxs("div", {
+          className: "mt-4 flex items-start gap-3 rounded-lg border border-border-default bg-surface-overlay/40 p-3",
+          children: [_0x49f366.jsx(y, {
+            className: "size-5 text-text-muted shrink-0 mt-0.5"
+          }), _0x49f366.jsxs("div", {
+            children: [_0x49f366.jsx("p", {
+              className: "text-sm font-medium text-text-primary",
+              children: _0xf43c3e("settings.gameActivityDesktopOnly", "Masaüstü uygulaması gerekli")
+            }), _0x49f366.jsx("p", {
+              className: "text-xs text-text-muted mt-0.5",
+              children: _0xf43c3e("settings.gameActivityDesktopOnlyDesc", "Oyun tespiti yalnızca masaüstü uygulamasında çalışır. Otomatik oyun tespiti için masaüstü uygulamasını kullanın.")
+            })]
+          })]
+        }), _0x2bdbdd && _0x2051cc && _0x49f366.jsx("div", {
+          className: "mt-3 flex items-center gap-2 text-xs text-text-muted",
+          children: _0x240ebe ? _0x49f366.jsxs(_0x49f366.Fragment, {
+            children: [_0x49f366.jsx(j, {
+              className: "size-3 animate-spin"
+            }), _0x49f366.jsx("span", {
+              children: _0xf43c3e("settings.scanningProcesses", "Oyunlar taranıyor...")
+            })]
+          }) : _0x49f366.jsxs(_0x49f366.Fragment, {
+            children: [_0x49f366.jsx("span", {
+              className: "size-2 rounded-full bg-green-500/60"
+            }), _0x49f366.jsx("span", {
+              children: _0xf43c3e("settings.scannerActive", "Tarayıcı aktif")
+            })]
+          })
+        })]
+      }), _0x49f366.jsx(_0x5d478e, {
+        className: "bg-surface-overlay/70"
+      }), _0x49f366.jsxs("section", {
+        children: [_0x49f366.jsxs("div", {
+          className: "mb-4 sm:mb-5",
+          children: [_0x49f366.jsxs("div", {
+            className: "flex items-center gap-2",
+            children: [_0x49f366.jsx(x, {
+              className: "size-4 text-text-tertiary"
+            }), _0x49f366.jsx("div", {
+              className: "text-base font-semibold text-text-secondary",
+              children: _0xf43c3e("settings.gameVisibility", "Oyun Görünürlüğü")
+            })]
+          }), _0x49f366.jsx("p", {
+            className: "text-sm text-text-muted mt-0.5",
+            children: _0xf43c3e("settings.gameVisibilityDesc", "Belirli oyunların aktivite durumunuzda gösterilip gösterilmeyeceğini seçin.")
+          })]
+        }), _0x52ea91.length > 0 ? _0x49f366.jsx("div", {
+          className: "space-y-2",
+          children: _0x52ea91.map(_0x39b97c => _0x49f366.jsxs("div", {
+            className: "flex items-center justify-between gap-3 rounded-lg border border-border-default bg-surface-overlay/30 px-3 py-2.5",
+            children: [_0x49f366.jsxs("div", {
+              className: "flex items-center gap-3 min-w-0",
+              children: [_0x39b97c.icon_url ? _0x49f366.jsx("img", {
+                src: _0x39b97c.icon_url,
+                alt: _0x39b97c.name,
+                className: "size-8 rounded-md object-cover"
+              }) : _0x49f366.jsx("div", {
+                className: "size-8 rounded-md bg-surface-inset flex items-center justify-center",
+                children: _0x49f366.jsx(d, {
+                  className: "size-4 text-text-muted"
+                })
+              }), _0x49f366.jsx("span", {
+                className: "text-sm font-medium text-text-primary truncate",
+                children: _0x39b97c.name
+              })]
+            }), _0x49f366.jsxs("div", {
+              className: "flex items-center gap-2 shrink-0",
+              children: [_0x39b97c.show_in_status ? _0x49f366.jsx(o, {
+                className: "size-4 text-text-muted"
+              }) : _0x49f366.jsx(x, {
+                className: "size-4 text-text-muted"
+              }), _0x49f366.jsx(_0x4b0ce4, {
+                checked: _0x39b97c.show_in_status,
+                onCheckedChange: _0xa7a348 => _0xe6ca34(_0x39b97c.game_id, _0xa7a348),
+                disabled: !_0x2051cc
+              })]
+            })]
+          }, _0x39b97c.game_id))
+        }) : _0x49f366.jsxs("div", {
+          className: "flex flex-col items-center justify-center py-8 text-center",
+          children: [_0x49f366.jsx(d, {
+            className: "size-10 text-text-muted/50 mb-2"
+          }), _0x49f366.jsx("p", {
+            className: "text-sm text-text-muted",
+            children: _0xf43c3e("settings.noGamesDetected", "Henüz tespit edilen oyun yok")
+          }), _0x49f366.jsx("p", {
+            className: "text-xs text-text-muted/70 mt-1",
+            children: _0xf43c3e("settings.noGamesDetectedDesc", "Bir oyun başlattığınızda burada görünecektir.")
+          })]
+        })]
+      }), _0x49f366.jsx(_0x5d478e, {
+        className: "bg-surface-overlay/70"
+      }), _0x49f366.jsxs("section", {
+        children: [_0x49f366.jsxs("div", {
+          className: "mb-4 sm:mb-5",
+          children: [_0x49f366.jsxs("div", {
+            className: "flex items-center gap-2",
+            children: [_0x49f366.jsx(u, {
+              className: "size-4 text-text-tertiary"
+            }), _0x49f366.jsx("div", {
+              className: "text-base font-semibold text-text-secondary",
+              children: _0xf43c3e("settings.searchGames", "Oyun Ara")
+            })]
+          }), _0x49f366.jsx("p", {
+            className: "text-sm text-text-muted mt-0.5",
+            children: _0xf43c3e("settings.searchGamesDesc", "Oyun veritabanında arama yaparak manuel olarak oyun ekleyebilirsiniz.")
+          })]
+        }), _0x49f366.jsxs("div", {
+          className: "relative",
+          children: [_0x49f366.jsx(u, {
+            className: "absolute left-3 top-1/2 -translate-y-1/2 size-4 text-text-muted"
+          }), _0x49f366.jsx("input", {
+            type: "text",
+            value: _0x40a902,
+            onChange: _0x65f43c => _0x1f48c0(_0x65f43c.target.value),
+            placeholder: _0xf43c3e("settings.searchGamesPlaceholder", "Oyun adı yazın..."),
+            className: "w-full rounded-lg border border-border-default bg-surface-overlay/50 pl-9 pr-3 py-2 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-accent-primary"
+          }), _0x4f979d && _0x49f366.jsx(j, {
+            className: "absolute right-3 top-1/2 -translate-y-1/2 size-4 animate-spin text-text-muted"
+          })]
+        }), _0x58e113.length > 0 && _0x49f366.jsx("div", {
+          className: "mt-2 max-h-60 overflow-y-auto rounded-lg border border-border-default bg-surface-overlay/50",
+          children: _0x58e113.map(_0x1118f0 => _0x49f366.jsxs("button", {
+            onClick: () => {
+              _0x263a45.getState().setCurrentGame({
+                id: _0x1118f0.id,
+                name: _0x1118f0.name,
+                slug: _0x1118f0.slug,
+                icon_url: _0x1118f0.icon_url,
+                cover_url: _0x1118f0.cover_url,
+                genres: _0x1118f0.genres,
+                platforms: _0x1118f0.platforms
+              }, null);
+              _0x1f48c0("");
+              _0x5c3831([]);
+              _0x1afb9a.success(_0xf43c3e("settings.gameActivitySet", "{{game}} aktivite olarak ayarlandı", {
+                game: _0x1118f0.name
+              }));
+            },
+            className: "flex items-center gap-3 w-full px-3 py-2 text-left hover:bg-surface-overlay/80 transition-colors first:rounded-t-lg last:rounded-b-lg",
+            children: [_0x1118f0.icon_url ? _0x49f366.jsx("img", {
+              src: _0x1118f0.icon_url,
+              alt: _0x1118f0.name,
+              className: "size-8 rounded-md object-cover"
+            }) : _0x49f366.jsx("div", {
+              className: "size-8 rounded-md bg-surface-inset flex items-center justify-center",
+              children: _0x49f366.jsx(d, {
+                className: "size-4 text-text-muted"
+              })
+            }), _0x49f366.jsxs("div", {
+              className: "flex-1 min-w-0",
+              children: [_0x49f366.jsx("p", {
+                className: "text-sm font-medium text-text-primary truncate",
+                children: _0x1118f0.name
+              }), _0x1118f0.genres.length > 0 && _0x49f366.jsx("p", {
+                className: "text-xs text-text-muted truncate",
+                children: _0x1118f0.genres.join(", ")
+              })]
+            })]
+          }, _0x1118f0.id))
+        })]
+      }), _0x49f366.jsxs("div", {
+        className: "flex items-start gap-3 rounded-lg border border-border-default bg-surface-overlay/40 p-3",
+        children: [_0x49f366.jsx(f, {
+          className: "size-4 text-text-muted shrink-0 mt-0.5"
+        }), _0x49f366.jsx("p", {
+          className: "text-xs text-text-muted leading-relaxed",
+          children: _0xf43c3e("settings.gameActivityInfo", "Oyun aktivitesi, çalışan uygulamalarınızı tarayarak otomatik olarak tespit edilir. Yalnızca veritabanımızda kayıtlı oyunlar tanınır. Tanınmayan bir oyun için eşleştirme önerisi gönderebilirsiniz.")
+        })]
+      })]
+    });
+  }
+});
+h.displayName = "GameActivitySettings";
+export { h as default };

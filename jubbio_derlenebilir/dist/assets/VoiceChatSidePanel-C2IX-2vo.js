@@ -1,0 +1,119 @@
+import { R as _0x1774eb, r as _0x5f15dc, ba as _0x1bfd57, j as _0x4e1671, I as _0x107951, X as _0x220954 } from "./index-cQfEKR1W.js";
+import { C as _0x16be4e } from "./Chat-CPyuEIX_.js";
+import "./AppLayout-BEBJqe9_.js";
+import "./soundboardFx-C2LP-Hjs.js";
+import "./index-BUijt7wr.js";
+import "./tr-D975n4_R.js";
+import "./select-DQjjzSZW.js";
+import "./index-Oyyh46KT.js";
+import "./arrow-left-B3FhifN2.js";
+import "./arrow-right-DvlsXLCB.js";
+import "./loader-circle-CTtxa1g9.js";
+import "./switch-lfnbGePn.js";
+import "./drawer-X7YyCqpZ.js";
+import "./index-yuEHo9bu.js";
+import "./input-AMyERYwJ.js";
+import "./subscription-Cl5JAGbQ.js";
+import "./useTheme-CzNZmxfV.js";
+import "./ComparisonTable-DUfwtDVZ.js";
+import "./card-Bk6R3tFg.js";
+import "./gift-Co-azAyt.js";
+import "./CheckoutPlaceholder-Dr0TfmeQ.js";
+import "./IyzicoCheckoutFrame-f1WDW5o8.js";
+import "./zap-B3VH4qT9.js";
+import "./dialog-BMMpM7PR.js";
+import "./submit-button-B2LF_DTf.js";
+import "./NexusSuccessArtwork-YGvslhff.js";
+import "./circle-x-BBSKKBIf.js";
+import "./avatar-C-4BWxT3.js";
+import "./ConfirmDialog-B4gIndKy.js";
+import "./alert-dialog-BZuoGg7O.js";
+import "./user-DSjlY8FD.js";
+import "./refresh-cw-C3NlhmpS.js";
+import "./trash-2-DuFcDcAU.js";
+import "./clipboard-BQ9qambq.js";
+import "./label-ODyS97Ju.js";
+import "./video-AtsAgCNJ.js";
+import "./plus-B7c2Px8R.js";
+import "./channelNotificationStore-FXjXBmS_.js";
+import "./index.module-CsHioFCV.js";
+import "./index-Bk4sqYoK.js";
+import "./useChannels-DWXrCtmH.js";
+import "./IncomingFriendRequestBanner-JRkFxhgX.js";
+import "./ReportDialog-ByLH3UTW.js";
+import "./report-SxkUMari.js";
+import "./arrow-up-B3WqkBSJ.js";
+import "./LinkRenderer-BUE7oc0G.js";
+import "./prism-2cMp9j73.js";
+import "./ellipsis-Bsf-uAoC.js";
+import "./ModerationSheet-CqLxYHCF.js";
+import "./ModerationModal-CS_sqQfM.js";
+import "./UserProfilePanel-COOz864M.js";
+import "./checkbox-6NFFWv4U.js";
+import "./textarea-CIeIrkot.js";
+import "./useGlobalKeyboard-Woyx4Cai.js";
+import "./copy-D6m_ILAw.js";
+import "./bot--rnBv7zG.js";
+import "./user-x-D7hkQEsg.js";
+import "./ReportMessageDialog-Ca_7LQnT.js";
+import "./message-square-warning-CLoriRUW.js";
+import "./shield-off-BIo5sBqK.js";
+import "./heart-BTCd1Bwb.js";
+import "./circle-question-mark-PWsoYL5a.js";
+import "./download-CURuSoyZ.js";
+import "./smile-Do8NR4vN.js";
+import "./forumStore-8MsrR85a.js";
+import "./forum-KIuo_CQJ.js";
+import "./TipTapEditor-BMYECO5E.js";
+import "./with-selector-DzPX4d1H.js";
+import "./radio-DVcFOQyH.js";
+import "./lock-BtNDHQqS.js";
+import "./ForumTagBadge-BD2DdFbQ.js";
+import "./chevron-left-CoNyL-61.js";
+const m = () => {};
+const p = _0x1774eb.memo(({
+  guildId: _0xe1148f,
+  channelId: _0x206a23,
+  channelName: _0x556681,
+  channelTopic: _0x29525e
+}) => {
+  const _0x48f3f7 = _0x5f15dc.useCallback(() => {
+    _0x1bfd57.getState().setChatOpen(false);
+  }, []);
+  return _0x4e1671.jsxs("div", {
+    className: "h-full flex flex-col border-l border-border-default bg-surface-base",
+    children: [_0x4e1671.jsxs("div", {
+      className: "h-14 flex items-center justify-between px-4 border-b border-border-default shrink-0 bg-surface-raised/70",
+      children: [_0x4e1671.jsxs("div", {
+        className: "flex items-center gap-2 min-w-0 flex-1",
+        children: [_0x4e1671.jsx(_0x107951, {
+          icon: "solar:volume-loud-bold-duotone",
+          className: "w-4 h-4 text-text-tertiary shrink-0"
+        }), _0x4e1671.jsx("span", {
+          className: "text-sm font-semibold text-text-secondary truncate",
+          children: _0x556681
+        })]
+      }), _0x4e1671.jsx("button", {
+        onClick: _0x48f3f7,
+        className: "p-1.5 hover:bg-surface-inset rounded-md transition-colors cursor-pointer shrink-0",
+        "aria-label": "Sohbeti kapat",
+        children: _0x4e1671.jsx(_0x220954, {
+          className: "w-4 h-4 text-text-tertiary hover:text-text-secondary"
+        })
+      })]
+    }), _0x4e1671.jsx("div", {
+      className: "flex-1 overflow-hidden",
+      children: _0x4e1671.jsx(_0x16be4e, {
+        guildId: _0xe1148f,
+        channelId: _0x206a23,
+        channelName: _0x556681,
+        channelTopic: _0x29525e,
+        isDM: false,
+        isGroupDM: false,
+        isVoiceChat: true,
+        onMessagePinned: m
+      })
+    })]
+  });
+});
+export { p as default };

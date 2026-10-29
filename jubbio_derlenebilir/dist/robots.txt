@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://jubbio.com/sitemap.xml
+
+# Disallow app routes (requires auth)
+Disallow: /app/
+Disallow: /app
+
+# Disallow API and internal routes
+Disallow: /api/
+Disallow: /oauth2/
+
+# Allow all public pages
+Allow: /
+Allow: /about
+Allow: /download
+Allow: /nexus
+Allow: /help-center
+Allow: /partnership
+Allow: /privacy-policy
+Allow: /terms-of-service
+Allow: /cookie-policy
+Allow: /account-deletion
+Allow: /child-safety
+Allow: /dev
+Allow: /dev/docs
