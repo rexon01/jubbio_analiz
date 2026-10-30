@@ -1,0 +1,23 @@
+Copyright (c) 2026 rexon01
+
+This repository contains two kinds of material.
+
+1. Third-party material (NOT licensed by this repository)
+
+   The Jubbio desktop client code and assets, including everything under
+   okunabilir_kod/, electron/ and jubbio_derlenebilir/ that originates from the
+   Jubbio application (JavaScript, HTML, images, icons, sounds, videos, logos and
+   the "Jubbio" name), are the property of their respective owners. They are
+   included for research, interoperability and educational purposes only. No
+   license to this material is granted here, and nothing in this file should be
+   read as granting one.
+
+2. Original material by rexon01
+
+   The analysis documents (README.md, README.tr.md, MIMARI.md, SECURITY.md,
+   jubbio_derlenebilir/BENIOKU.md and docs/) are Copyright (c) 2026 rexon01.
+   All rights reserved, except that you may read, share and quote them with
+   attribution and a link to https://github.com/rexon01/jubbio_analiz.
+
+THIS REPOSITORY IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. THE AUTHOR IS
+NOT AFFILIATED WITH JUBBIO AND IS NOT LIABLE FOR ANY USE OF ITS CONTENTS.

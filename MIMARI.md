@@ -112,8 +112,21 @@ Gürültü engelleme modeli `cdn.jubbio.com/rnnoise`'dan yüklenir. Bas-konuş t
 
 | Klasör | İçerik |
 |---|---|
-| `dist/` | Orijinal (gizlenmiş) arayüz derlemesi |
-| `okunabilir_kod/assets/` | `dist/assets` dosyalarının JSX'li okunur hali — **okumak için** |
-| `jubbio_derlenebilir/` | Okunur kodla çalışan, `electron-builder` ile paketlenebilen proje |
-| `electron/` | Masaüstü kabuğu (zaten düz kod) |
-| `release/` | Eski paketlenmiş çıktı |
+| `okunabilir_kod/assets/` | Arayüz derlemesinin JSX'li okunur hali — **okumak için** |
+| `jubbio_derlenebilir/` | Okunur kodla çalışan, `electron-builder` ile paketlenebilen proje (`dist/` + yamalı `electron/`) |
+| `electron/` | Orijinal masaüstü kabuğu (zaten düz kod, değiştirilmemiş) |
+
+Orijinal gizlenmiş `dist/` derlemesi ve `release/` çıktıları repoya alınmadı.
+
+## 6. Derlenebilir sürümdeki değişiklikler
+
+`jubbio_derlenebilir/electron/` ile kökteki orijinal `electron/` arasındaki farklar:
+
+| Dosya | Değişiklik |
+|---|---|
+| `main.cjs` | `detectTampering()` her zaman `detected: false` döner; `reportTampering` ve renderer tamper raporu erken `return` ile kapatıldı |
+| `main.cjs` | Yeni "Nexus Tor" bölümü: `nexus-tor-connect` / `nexus-tor-disconnect` IPC'leri `tor.exe`'yi (`resources/tor` → `electron/tor` → `PATH`) `--SocksPort 9050` ile başlatır, oturumu SOCKS'a yönlendirir ve `check.torproject.org/api/ip` ile doğrular |
+| `preload.cjs` | `window.electron.torConnect()` / `torDisconnect()` eklendi |
+| `package.json` | `appId: com.jubbio.client.duzenlenmis`, `productName: Jubbio Duzenlenmis`, `publish: null`, `extraResources` ile `electron/tor` |
+
+Farkları görmek için: `git diff --no-index electron jubbio_derlenebilir/electron`

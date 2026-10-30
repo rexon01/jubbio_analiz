@@ -5,8 +5,9 @@ Genel yapı için bir üst klasördeki `MIMARI.md` dosyasına bak.
 
 ## Klasörler
 - `dist/` — arayüz. `assets/*.js` dosyaları artık okunur JS; **doğrudan düzenlenebilir**, ayrı bir derleme adımı yok.
-- `electron/` — masaüstü kabuğu (orijinalle aynı).
-- `release/win-unpacked/Jubbio.exe` — son paketlenmiş çıktı.
+- `electron/` — masaüstü kabuğu (yamalı; farklar için `../MIMARI.md` bölüm 6).
+- `electron/tor/` — isteğe bağlı `tor.exe` buraya konur (repoda yok).
+- `release/` — `npm run pack` / `npm run dist` çıktısı (repoda yok).
 
 ## Komutlar
 ```
@@ -21,4 +22,4 @@ npm run dist       # NSIS kurulum dosyası (.exe) oluştur
 - Değişken adları (`_0x...`) orijinal değil; derlemede kaybolmuş isimler geri getirilemez.
 - `package.json` içinde `npmRebuild: false` var: `uiohook-napi` hazır derlenmiş (prebuild) dosyayla
   geliyor, Visual Studio olmadan yeniden derlenemiyor.
-- `main.cjs` içindeki bütünlük kontrolü değiştirilmiş istemcileri `api.jubbio.com`'a raporlayabilir.
+- Orijinal `main.cjs` değiştirilmiş istemcileri `api.jubbio.com`'a raporlar; bu sürümde bu rapor kapalı.

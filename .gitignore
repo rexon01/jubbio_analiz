@@ -4,3 +4,8 @@ release/
 *.asar
 .env*
 
+
+npm-debug.log*
+.DS_Store
+Thumbs.db
+jubbio_derlenebilir/electron/tor/
